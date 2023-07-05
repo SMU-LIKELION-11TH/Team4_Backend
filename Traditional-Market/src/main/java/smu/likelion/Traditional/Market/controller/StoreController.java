@@ -28,7 +28,7 @@ public class StoreController {
     @GetMapping("/stores")
     public ResponseEntity<List<StoreReturnDto>> getAllStore(){
         try{
-            List<StoreReturnDto> storeReturnDtoList = storeService.findByAll();
+            List<StoreReturnDto> storeReturnDtoList = storeService.findAll();
 
             return ResponseEntity.ok(storeReturnDtoList);
 

@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import smu.likelion.Traditional.Market.domain.Category;
 import smu.likelion.Traditional.Market.domain.Store;
@@ -46,15 +47,9 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public List<StoreReturnDto> findByAll(){
+    public List<StoreReturnDto> findAll(){
         try{
             List<Store> storeList = storeRepository.findAll();
-            List<StoreReturnDto> productReturnDtoList = new ArrayList<>();
-            for (Store store : storeList) { //가장 쉬운방식
-                productReturnDtoList.add(new StoreReturnDto(store));
-            }
-            System.out.println(productReturnDtoList);
-
 
             return storeList.stream().map(StoreReturnDto::new).collect(Collectors.toList());
         }catch (Exception e){
@@ -88,31 +83,30 @@ public class StoreServiceImpl implements StoreService{
             if(storeData.isPresent()){
                 Store store = storeData.get();
 
-                Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
-                System.out.println(storeRequestDto.getCategoryId().getClass().getName());
+                Optional<Category> category = categoryRepository.findById(store.getCategory().getId());
                 Category category1 = category.get();
                 System.out.println(category1);
-//                store.builder()
-//                        .storeName(storeRequestDto.getStoreName())
-//                        .storeDesc(storeRequestDto.getStoreDesc())
-//                        .storeAddress(storeRequestDto.getStoreAddress())
-//                        .storeTime(storeRequestDto.getStoreTime())
-//                        .storeTel(storeRequestDto.getStoreTel())
-//                        .storeImageList(storeRequestDto.getStoreImageList())
-//                        .menuList(storeRequestDto.getMenuList()) //얘 수정을 해야함 이유 : 아까 민수형이 말했 듯이 store전체를 가져오는게 아니라 일부만 가져오는 것임.
-//                        .category(category1)
-//                        .build();
-                //store객체를 꺼내오고 거기에 데
-                store.setId(id);
-                store.setStoreName(storeRequestDto.getStoreName());
-                store.setStoreDesc(storeRequestDto.getStoreDesc());
-                store.setStoreTel(storeRequestDto.getStoreTel());
-                store.setStoreTime(storeRequestDto.getStoreTime());
-                store.setCategory(category1);
+                Store Editstore = store.builder()
+                        .storeName(storeRequestDto.getStoreName())
+                        .storeDesc(storeRequestDto.getStoreDesc())
+                        .storeAddress(storeRequestDto.getStoreAddress())
+                        .storeTime(storeRequestDto.getStoreTime())
+                        .storeTel(storeRequestDto.getStoreTel())
+                        .storeImageList(storeRequestDto.getStoreImageList())
+                        .menuList(storeRequestDto.getMenuList()) //얘 수정을 해야함 이유 : 아까 민수형이 말했 듯이 store전체를 가져오는게 아니라 일부만 가져오는 것임.
+                        .category(category1)
+                        .build();
+//                store객체를 꺼내오고 거기에 데
+//                store.setStoreName(storeRequestDto.getStoreName());
+//                store.setStoreDesc(storeRequestDto.getStoreDesc());
+//                store.setStoreTel(storeRequestDto.getStoreTel());
+//                store.setStoreTime(storeRequestDto.getStoreTime());
+//                store.setStoreAddress(storeRequestDto.getStoreAddress());
+//                store.setCategory(category1);
 
 
-                storeRepository.save(store);
-                return new StoreReturnDto(store);
+                storeRepository.save(Editstore);
+                return new StoreReturnDto(Editstore);
 
             }else {
                 return null;

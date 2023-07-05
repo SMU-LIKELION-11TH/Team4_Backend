@@ -1,8 +1,6 @@
 package smu.likelion.Traditional.Market.dto.store;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import smu.likelion.Traditional.Market.domain.Category;
 import smu.likelion.Traditional.Market.domain.Menu;
 import smu.likelion.Traditional.Market.domain.Store;
@@ -12,6 +10,8 @@ import java.util.List;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class StoreReturnDto {
     private Long storeId;
     private String storeName;
