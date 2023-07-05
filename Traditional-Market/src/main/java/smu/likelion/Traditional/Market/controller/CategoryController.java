@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import smu.likelion.Traditional.Market.dto.CategoryResponseDto;
-import smu.likelion.Traditional.Market.service.CategoryService;
+import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
+import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
-    CategoryService categoryService;
+    CategoryServiceImpl categoryService;
 
     @GetMapping("/category")
-    public ResponseEntity<List<CategoryResponseDto>> getCategoriesByMarketId(@RequestParam("market_id") Long marketId){
+    public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketId(@RequestParam("market_id") Long marketId){
         try{
             System.out.println(">>> marketId = " + marketId);
             return ResponseEntity.ok(categoryService.findByMarketId(marketId));
