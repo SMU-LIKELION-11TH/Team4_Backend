@@ -86,27 +86,29 @@ public class StoreServiceImpl implements StoreService{
                 Optional<Category> category = categoryRepository.findById(store.getCategory().getId());
                 Category category1 = category.get();
                 System.out.println(category1);
-                Store Editstore = store.builder()
-                        .storeName(storeRequestDto.getStoreName())
-                        .storeDesc(storeRequestDto.getStoreDesc())
-                        .storeAddress(storeRequestDto.getStoreAddress())
-                        .storeTime(storeRequestDto.getStoreTime())
-                        .storeTel(storeRequestDto.getStoreTel())
-                        .storeImageList(storeRequestDto.getStoreImageList())
-                        .menuList(storeRequestDto.getMenuList()) //얘 수정을 해야함 이유 : 아까 민수형이 말했 듯이 store전체를 가져오는게 아니라 일부만 가져오는 것임.
-                        .category(category1)
-                        .build();
+                System.out.println(storeRequestDto.getStoreAddress());
+                sout
+//                Store Editstore = store.builder()
+//                        .storeName("새로운 store이름입니다.")
+//                        .storeDesc(storeRequestDto.getStoreDesc())
+//                        .storeAddress("새로운 address입니다.")
+//                        .storeTime(storeRequestDto.getStoreTime())
+//                        .storeTel(storeRequestDto.getStoreTel())
+//                        .storeImageList(storeRequestDto.getStoreImageList())
+//                        .menuList(storeRequestDto.getMenuList()) //얘 수정을 해야함 이유 : 아까 민수형이 말했 듯이 store전체를 가져오는게 아니라 일부만 가져오는 것임.
+//                        .category(category1)
+//                        .build();
 //                store객체를 꺼내오고 거기에 데
-//                store.setStoreName(storeRequestDto.getStoreName());
-//                store.setStoreDesc(storeRequestDto.getStoreDesc());
-//                store.setStoreTel(storeRequestDto.getStoreTel());
-//                store.setStoreTime(storeRequestDto.getStoreTime());
-//                store.setStoreAddress(storeRequestDto.getStoreAddress());
-//                store.setCategory(category1);
+                store.setStoreName("새로운 store이름입니다.");
+                store.setStoreDesc(storeRequestDto.getStoreDesc());
+                store.setStoreTel(storeRequestDto.getStoreTel());
+                store.setStoreTime(storeRequestDto.getStoreTime());
+                store.setStoreAddress("새로운 store주소 입니다.");
+                store.setCategory(category1);
 
 
-                storeRepository.save(Editstore);
-                return new StoreReturnDto(Editstore);
+                storeRepository.save(store);
+                return new StoreReturnDto(store);
 
             }else {
                 return null;
