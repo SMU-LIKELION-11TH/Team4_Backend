@@ -1,5 +1,6 @@
 package smu.likelion.Traditional.Market.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -25,12 +27,14 @@ public class Menu {
     @Column(name = "menu_desc")
     private String menuDesc;
 
-    @Lob
-    @Column(name = "menu_Image", length = 1000, nullable = false) //여기 수정해야함
-    private byte[] menuImage;
-    private  String imageName;
-    private  String imagetype;
+    @Column(name = "image_name",nullable = false)
+    private String imageName;
 
+    @Column(name = "image_url", length = 1000, nullable = false) //여기 수정해야함
+    private  String imageUrl;
+
+
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="store_id")
     private Store store;

@@ -13,7 +13,8 @@ public class MenuRequestDto {
     private String menuName;
     private Integer menuPrice;
     private String menuDesc;
-    private byte[] menuImage;
+    private String imageName;
+    private String imageUrl;
     private Long storeId;
 
     public Menu toEntity(Store store){
@@ -21,7 +22,8 @@ public class MenuRequestDto {
                 .menuName(this.menuName)
                 .menuDesc(this.menuDesc)
                 .menuPrice(this.menuPrice)
-                .menuImage(this.menuImage)
+                .imageName(this.imageName)
+                .imageUrl(this.imageUrl)
                 .store(store)
                 .build();
     }

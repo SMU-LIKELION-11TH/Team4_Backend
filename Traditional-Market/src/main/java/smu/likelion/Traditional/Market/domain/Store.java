@@ -1,5 +1,7 @@
 package smu.likelion.Traditional.Market.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sun.istack.NotNull;
 import lombok.*;
 
@@ -33,12 +35,15 @@ public class Store {
     @Column(name = "store_tel")
     private String storeTel;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "store")
     private List<Menu> menuList = new ArrayList<>();
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "store")
     private List<StoreImage> storeImageList = new ArrayList<>();
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
