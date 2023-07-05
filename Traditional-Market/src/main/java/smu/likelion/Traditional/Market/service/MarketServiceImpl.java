@@ -53,9 +53,9 @@ public class MarketServiceImpl implements MarketService{
     @Override
     public boolean update(Long id, MarketRequestDto marketRequestDto){
         try {
-            Optional<Market> marketData = marketRepository.findById(id);
-            if(marketData.isPresent()){
-                Market market = marketData.get();
+            Optional<Market> marketOptional = marketRepository.findById(id);
+            if(marketOptional.isPresent()){
+                Market market = marketOptional.get();
                 market.setMarketName(marketRequestDto.getMarketName());
                 market.setMarketAddress(marketRequestDto.getMarketAddress());
                 market.setMarketDesc(marketRequestDto.getMarketDesc());

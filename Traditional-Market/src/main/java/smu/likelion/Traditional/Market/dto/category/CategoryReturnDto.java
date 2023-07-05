@@ -8,10 +8,10 @@ public class CategoryReturnDto {
 
     private Long id;
 
-    private String category_name;
+    private String categoryName;
 
     public CategoryReturnDto(Category category) {
         this.id = category.getId();
-        this.category_name = category.getCategoryName();
+        this.categoryName = category.getCategoryName();
     }
 }

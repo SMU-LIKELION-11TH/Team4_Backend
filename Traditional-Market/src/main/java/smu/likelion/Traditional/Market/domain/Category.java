@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 
 import javax.persistence.*;
 
@@ -28,4 +29,9 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "market_id")
     private Market market;
+
+    public Category(CategoryRequestDto categoryRequestDto, Market market){
+        this.categoryName = categoryRequestDto.getCategoryName();
+        this.market = market;
+    }
 }
