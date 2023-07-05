@@ -87,7 +87,8 @@ public class StoreServiceImpl implements StoreService{
                 Category category1 = category.get();
                 System.out.println(category1);
                 System.out.println(storeRequestDto.getStoreAddress());
-                sout
+                System.out.println(storeRequestDto.getStoreName());
+
 //                Store Editstore = store.builder()
 //                        .storeName("새로운 store이름입니다.")
 //                        .storeDesc(storeRequestDto.getStoreDesc())

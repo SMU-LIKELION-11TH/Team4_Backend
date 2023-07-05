@@ -46,7 +46,7 @@ public class StoreController {
     }
 
     @PutMapping("/stores/{storeid}")
-    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id, StoreRequestDto storeRequestDto) {
+    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id, @RequestBody StoreRequestDto storeRequestDto) {
         StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto);
         return ResponseEntity.ok(storeReturnDto);
     }
