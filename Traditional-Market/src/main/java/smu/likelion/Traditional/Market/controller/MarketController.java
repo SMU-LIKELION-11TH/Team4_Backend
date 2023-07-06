@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smu.likelion.Traditional.Market.domain.Market;
 import smu.likelion.Traditional.Market.domain.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
@@ -11,6 +12,7 @@ import smu.likelion.Traditional.Market.service.ImageServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -24,7 +26,7 @@ public class MarketController {
 
     //사용자 인증 필요
     @PostMapping("/markets")
-    public ResponseEntity<?> createMarket(MarketRequestDto marketRequestDto){
+    public ResponseEntity<?> createMarket(MarketRequestDto marketRequestDto){//프론트에서 어떻게 보내주면 되지?
         try{
             UploadFile uploadFile = imageService.storeFile(marketRequestDto.getMarketImage());
             marketService.save(marketRequestDto, uploadFile);
@@ -35,6 +37,7 @@ public class MarketController {
         return null;
     }
 
+    /*
     @GetMapping("/markets")
     public ResponseEntity<List<MarketReturnDto>> getMarkets(){
         try{
@@ -43,16 +46,23 @@ public class MarketController {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     @GetMapping("/markets/{id}")
     public ResponseEntity<MarketReturnDto> getMarketById(@PathVariable("id") Long id){
         try{
+            Optional<Market> marketOptional = marketService.findById(id);
+            if(marketOptional.isPresent()){
+                Market market = marketOptional.get();
+                String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
+                return ResponseEntity.ok(new MarketReturnDto(market, marketImageUrl));
+            }
+            /*
             //Optional로 해야하나?
-            MarketReturnDto marketReturnDto = marketService.findById(id);
+            //MarketReturnDto marketReturnDto = marketService.findById(id);
             if(marketReturnDto != null){
                 return ResponseEntity.ok(marketReturnDto);
-            }
+            }*/
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             e.printStackTrace();
@@ -62,7 +72,7 @@ public class MarketController {
 
     //사용자 인증 필요
     @PutMapping("/markets/{id}")
-    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, @RequestBody MarketRequestDto marketRequestDto){
+    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, MarketRequestDto marketRequestDto){
         try {
             UploadFile uploadFile = imageService.storeFile(marketRequestDto.getMarketImage());
             if(marketService.update(id, marketRequestDto, uploadFile)){

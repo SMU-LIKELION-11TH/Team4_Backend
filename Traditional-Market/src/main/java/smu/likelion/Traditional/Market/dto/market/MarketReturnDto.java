@@ -14,13 +14,16 @@ public class MarketReturnDto {
 
     private String marketDesc;
 
-    private String marketImage;
+    //private String marketImageBase64;
 
-    public MarketReturnDto(Market market){
+    private String marketImageUrl;
+
+    public MarketReturnDto(Market market, String marketImageUrl){
         this.id = market.getId();
         this.marketName = market.getMarketName();
         this.marketAddress = market.getMarketAddress();
         this.marketDesc = market.getMarketDesc();
         //this.marketImage = market.getMarketImage();
+        this.marketImageUrl = marketImageUrl;
     }
 }

@@ -27,6 +27,7 @@ public class MarketServiceImpl implements MarketService{
         }
     }
 
+    /*
     @Override
     public List<MarketReturnDto> findAll(){
         try{
@@ -36,15 +37,17 @@ public class MarketServiceImpl implements MarketService{
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     @Override
-    public MarketReturnDto findById(Long id){
+    public Optional<Market> findById(Long id){
         try {
+            return marketRepository.findById(id);
+            /*
             Optional<Market> market = marketRepository.findById(id);
             if(market.isPresent()){
-                return new MarketReturnDto(market.get());
-            }
+                return market.get();
+            }*/
         } catch (Exception e){
             e.printStackTrace();
         }
