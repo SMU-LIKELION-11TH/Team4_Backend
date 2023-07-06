@@ -21,6 +21,6 @@ public class MarketReturnDto {
         this.marketName = market.getMarketName();
         this.marketAddress = market.getMarketAddress();
         this.marketDesc = market.getMarketDesc();
-        this.marketImage = market.getMarketImage();
+        //this.marketImage = market.getMarketImage();
     }
 }

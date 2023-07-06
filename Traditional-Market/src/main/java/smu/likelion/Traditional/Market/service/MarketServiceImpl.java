@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smu.likelion.Traditional.Market.domain.Market;
+import smu.likelion.Traditional.Market.domain.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.repository.MarketRepository;
@@ -18,9 +19,9 @@ public class MarketServiceImpl implements MarketService{
     private MarketRepository marketRepository;
 
     @Override
-    public void save(MarketRequestDto marketRequestDto){
+    public void save(MarketRequestDto marketRequestDto, UploadFile uploadFile){
         try{
-            marketRepository.save(new Market(marketRequestDto));
+            marketRepository.save(new Market(marketRequestDto, uploadFile));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -51,7 +52,7 @@ public class MarketServiceImpl implements MarketService{
     }
 
     @Override
-    public boolean update(Long id, MarketRequestDto marketRequestDto){
+    public boolean update(Long id, MarketRequestDto marketRequestDto, UploadFile uploadFile){
         try {
             Optional<Market> marketOptional = marketRepository.findById(id);
             if(marketOptional.isPresent()){
@@ -59,7 +60,8 @@ public class MarketServiceImpl implements MarketService{
                 market.setMarketName(marketRequestDto.getMarketName());
                 market.setMarketAddress(marketRequestDto.getMarketAddress());
                 market.setMarketDesc(marketRequestDto.getMarketDesc());
-                market.setMarketImage(marketRequestDto.getMarketImage());
+                market.setUploadFilename(uploadFile.getUploadFilename());
+                market.setStoreFilename(uploadFile.getStoreFilename());
                 marketRepository.save(market);
                 return true;
             }
