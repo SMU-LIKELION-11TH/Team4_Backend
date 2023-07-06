@@ -1,6 +1,7 @@
 package smu.likelion.Traditional.Market.domain.entity;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,4 +30,12 @@ public class Review extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     Store store;
+
+    @Builder
+    public Review(Integer stars, String content, User user, Store store) {
+        this.stars = stars;
+        this.content = content;
+        this.user = user;
+        this.store = store;
+    }
 }
