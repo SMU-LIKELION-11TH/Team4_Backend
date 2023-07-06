@@ -19,19 +19,11 @@ public class StoreImage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "upload_filename", nullable = false)
-    private String uploadFilename;
-
     @Column(name = "store_filename", nullable = false)
-    private String storeFilename;
+    private String storeFilename; //저장될 이름
 
-    @ElementCollection
-    @Column(name = "store_image_List", nullable = false) //여기 수정해야함
-    private List<String> storeImageNameList;
-
-    @ElementCollection
-    @Column(name = "image_name", length = 1000,nullable = false)
-    private List<String> storeImageUrlList;
+    @Column(name = "image_url", length = 1000,nullable = false)
+    private String storeImageUrl;
 
 
     @JsonBackReference
@@ -45,11 +37,9 @@ public class StoreImage {
     }
 
     @Builder
-    public StoreImage(String uploadFilename, String storeFilename,List<String> storeImageNameList, List<String> storeImageUrlList, Store store) {
-        this.uploadFilename = uploadFilename;
+    public StoreImage(String storeFilename, String storeImageUrl, Store store) {
         this.storeFilename = storeFilename;
-        this.storeImageNameList = storeImageNameList;
-        this.storeImageUrlList = storeImageUrlList;
+        this.storeImageUrl = storeImageUrl;
         this.store = store;
     }
 }

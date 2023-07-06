@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.Category;
 import smu.likelion.Traditional.Market.domain.Store;
+import smu.likelion.Traditional.Market.domain.StoreImage;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
+import smu.likelion.Traditional.Market.dto.storeimage.StoreImageRequestDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
+import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
 
 import java.io.File;
@@ -27,6 +30,7 @@ public class StoreServiceImpl implements StoreService{
     @Autowired
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final StoreImageRepository storeImageRepository;
 
     @Override
     public StoreReturnDto save(List<MultipartFile> multipartFiles,StoreRequestDto storeRequestDto) {
@@ -35,6 +39,10 @@ public class StoreServiceImpl implements StoreService{
             final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
             Category category1 = category.get();
+            Store store = storeRequestDto.toEntity(category1);
+            System.out.println(category1);
+            System.out.println(store);
+            storeRepository.save(store);
 
             int len = multipartFiles.size();
             for(int i = 0; i< len; i++){
@@ -43,23 +51,36 @@ public class StoreServiceImpl implements StoreService{
                 String type = file.getContentType().substring(idx+1);
                 String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
 
+                Optional<Store> storeOptional = storeRepository.findByStoreName(storeRequestDto.getStoreName());
+                Store store1 = storeOptional.orElseThrow(() -> new IllegalArgumentException("Store not found"));
                 //local업로드 성공
                 file.transferTo(new File(UPLOAD_PATH+serverfilename));
-
-
                 //DB에 정보 저장하고 그거를 이제 불러와야하는데
-
-
+                //StoreImagerequestDto를 만들어서 그거를 DB에 저장
+                System.out.println(store1);
+//                StoreImageRequestDto storeImageRequestDto = StoreImageRequestDto.builder()
+//                        .storeFilename(serverfilename)
+//                        .storeImageUrl(UPLOAD_PATH+serverfilename)
+//                        .store(store1.get())
+//                        .build();
+//                StoreImageRequestDto storeImageRequestDto;
+//                storeImageRequestDto = new StoreImageRequestDto(serverfilename,UPLOAD_PATH+serverfilename,store1);
+//                //storeImageRequestDto.setStore(store1.get());
+//                //storeImageRequestDto.setStoreImageUrl(UPLOAD_PATH+serverfilename);
+//                //storeImageRequestDto.setStoreFilename(serverfilename);
+//                //이게 논리적으로는 맞지만 로직적으로는 아닌듯?
+//
+//                storeImageRepository.save(storeImageRequestDto.toEntity());
+                StoreImage storeImage = StoreImage.builder()
+                        .storeFilename(serverfilename)
+                        .storeImageUrl(UPLOAD_PATH+serverfilename)
+                        .store(store1)
+                        .build();
+                storeImageRepository.save(storeImage);  //왜 됨..?
             }
 
+//[image1 [asdasdas] image [asdasd]]
 
-
-
-
-
-
-            Store store = storeRequestDto.toEntity(category1);
-            storeRepository.save(store);
 
             return new StoreReturnDto(store);
 
