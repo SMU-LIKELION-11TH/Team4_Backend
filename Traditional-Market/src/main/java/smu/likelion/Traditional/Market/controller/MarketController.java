@@ -76,9 +76,15 @@ public class MarketController {
     @PutMapping("/markets/{id}")
     public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, @RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image){
         try {
-            UploadFile uploadFile = imageService.storeFile(image);
-            if(marketService.update(id, marketRequestDto, uploadFile)){
-                return new ResponseEntity<>(HttpStatus.OK);
+            Optional<Market> marketOptional = marketService.findById(id);
+            if(marketOptional.isPresent()){
+                Market market = marketOptional.get();
+                imageService.deleteFile(market.getStoreFilename());
+                UploadFile uploadFile = imageService.storeFile(image);
+                if(marketService.update(id, marketRequestDto, uploadFile)){
+                    return new ResponseEntity<>(HttpStatus.OK);
+                }
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
@@ -91,8 +97,14 @@ public class MarketController {
     @DeleteMapping("/markets/{id}")
     public ResponseEntity<?> deleteMarket(@PathVariable("id") Long id){
         try {
-            marketService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Optional<Market> marketOptional = marketService.findById(id);
+            if(marketOptional.isPresent()){
+                Market market = marketOptional.get();
+                imageService.deleteFile(market.getStoreFilename());
+                marketService.delete(id);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             e.printStackTrace();
         }

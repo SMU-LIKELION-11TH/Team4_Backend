@@ -10,4 +10,9 @@ public class UploadFile {
     private String uploadFilename;
 
     private String storeFilename;
+
+    public UploadFile(){
+        uploadFilename = null;
+        storeFilename = null;
+    }
 }

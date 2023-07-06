@@ -19,13 +19,16 @@ public class ImageServiceImpl implements ImageService{
 
     @Override
     public String getFullPath(String filename) {
+        if(filename == null){
+            return null;
+        }
         return fileDir + filename;
     }
 
     @Override
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
         if(multipartFile.isEmpty()){
-            return null;
+            return new UploadFile();
         }
 
         //original name에서는 확장자만 가져옴. uuid로 새로운 이름을 붙여줌
@@ -36,6 +39,14 @@ public class ImageServiceImpl implements ImageService{
         multipartFile.transferTo(new File(getFullPath(storeFilename)));
 
         return new UploadFile(originalFilename, storeFilename);
+    }
+
+    public void deleteFile(String filename){
+        String path = getFullPath(filename);
+        if(path != null){
+            File file = new File(getFullPath(filename));
+            file.delete();
+        }
     }
 
     //확장자 추출
