@@ -2,8 +2,10 @@ package smu.likelion.Traditional.Market.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.Market;
 import smu.likelion.Traditional.Market.domain.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
@@ -11,6 +13,7 @@ import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.ImageServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +28,10 @@ public class MarketController {
     ImageServiceImpl imageService;
 
     //사용자 인증 필요
-    @PostMapping("/markets")
-    public ResponseEntity<?> createMarket(MarketRequestDto marketRequestDto){//프론트에서 어떻게 보내주면 되지?
+    @PostMapping(value = "/markets", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> createMarket(@RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image){
         try{
-            UploadFile uploadFile = imageService.storeFile(marketRequestDto.getMarketImage());
+            UploadFile uploadFile = imageService.storeFile(image);
             marketService.save(marketRequestDto, uploadFile);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
@@ -37,16 +40,21 @@ public class MarketController {
         return null;
     }
 
-    /*
     @GetMapping("/markets")
     public ResponseEntity<List<MarketReturnDto>> getMarkets(){
         try{
-            return ResponseEntity.ok(marketService.findAll());
+            List<Market> marketList = marketService.findAll();
+            List<MarketReturnDto> marketReturnDtoList = new ArrayList<>();
+            for (Market market : marketList){
+                String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
+                marketReturnDtoList.add(new MarketReturnDto(market, marketImageUrl));
+            }
+            return ResponseEntity.ok(marketReturnDtoList);
         } catch (Exception e){
             e.printStackTrace();
         }
         return null;
-    }*/
+    }
 
     @GetMapping("/markets/{id}")
     public ResponseEntity<MarketReturnDto> getMarketById(@PathVariable("id") Long id){
@@ -57,12 +65,6 @@ public class MarketController {
                 String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
                 return ResponseEntity.ok(new MarketReturnDto(market, marketImageUrl));
             }
-            /*
-            //Optional로 해야하나?
-            //MarketReturnDto marketReturnDto = marketService.findById(id);
-            if(marketReturnDto != null){
-                return ResponseEntity.ok(marketReturnDto);
-            }*/
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
             e.printStackTrace();
@@ -72,9 +74,9 @@ public class MarketController {
 
     //사용자 인증 필요
     @PutMapping("/markets/{id}")
-    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, MarketRequestDto marketRequestDto){
+    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, @RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image){
         try {
-            UploadFile uploadFile = imageService.storeFile(marketRequestDto.getMarketImage());
+            UploadFile uploadFile = imageService.storeFile(image);
             if(marketService.update(id, marketRequestDto, uploadFile)){
                 return new ResponseEntity<>(HttpStatus.OK);
             }

@@ -12,7 +12,7 @@ public interface MarketService {
 
     public void save(MarketRequestDto marketRequestDto, UploadFile uploadFile);
 
-    //public List<MarketReturnDto> findAll();
+    public List<Market> findAll();
 
     public Optional<Market> findById(Long id);
 

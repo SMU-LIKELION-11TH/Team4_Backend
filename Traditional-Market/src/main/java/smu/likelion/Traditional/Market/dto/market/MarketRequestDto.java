@@ -2,7 +2,6 @@ package smu.likelion.Traditional.Market.dto.market;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.web.multipart.MultipartFile;
 
 @Getter @Setter
 public class MarketRequestDto {
@@ -12,6 +11,4 @@ public class MarketRequestDto {
     private String marketAddress;
 
     private String marketDesc;
-
-    private MultipartFile marketImage;
 }
