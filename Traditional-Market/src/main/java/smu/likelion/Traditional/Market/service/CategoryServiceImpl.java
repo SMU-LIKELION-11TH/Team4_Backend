@@ -25,9 +25,10 @@ public class CategoryServiceImpl implements CategoryService{
     @Override
     public boolean save(CategoryRequestDto categoryRequestDto, Long marketId){
         try{
-            Optional<Market> market = marketRepository.findById(marketId);
-            if(market.isPresent()){
-                categoryRepository.save(new Category(categoryRequestDto, market.get()));
+            Optional<Market> marketOptional = marketRepository.findById(marketId);
+            if(marketOptional.isPresent()){
+                Market market = marketOptional.get();
+                categoryRepository.save(new Category(categoryRequestDto, market));
                 return true;
             }
         } catch (Exception e){

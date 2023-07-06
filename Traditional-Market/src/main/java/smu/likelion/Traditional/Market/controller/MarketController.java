@@ -100,8 +100,8 @@ public class MarketController {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
-                imageService.deleteFile(market.getStoreFilename());
                 marketService.delete(id);
+                imageService.deleteFile(market.getStoreFilename());
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
