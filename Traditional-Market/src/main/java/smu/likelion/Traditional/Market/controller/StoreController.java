@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.service.StoreServiceImpl;
@@ -19,8 +20,9 @@ public class StoreController {
     StoreServiceImpl storeService;
 
     @PostMapping("/stores")
-    public ResponseEntity<StoreReturnDto> createStore(@RequestBody StoreRequestDto storeRequestDto){
-        StoreReturnDto storeReturnDto = storeService.save(storeRequestDto);
+    public ResponseEntity<StoreReturnDto> createStore(@RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
+                                                      @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto){
+        StoreReturnDto storeReturnDto = storeService.save(multipartFiles,storeRequestDto);
         return ResponseEntity.ok(storeReturnDto);
     }
 
@@ -46,8 +48,10 @@ public class StoreController {
     }
 
     @PutMapping("/stores/{storeid}")
-    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id, @RequestBody StoreRequestDto storeRequestDto) {
-        StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto);
+    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id,
+                                                          @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
+                                                          @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto) {
+        StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto,multipartFiles);
         return ResponseEntity.ok(storeReturnDto);
     }
 

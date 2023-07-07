@@ -92,8 +92,14 @@ public class MenuServiceImpl implements MenuService{
     }
 
     @Override
-    public MenuReturnDto update(Long id, MenuRequestDto menuRequestDto) {
+    public MenuReturnDto update(Long id, MenuRequestDto menuRequestDto, MultipartFile file) {
         Optional<Menu> menuData = menuRepository.findById(id);
+        String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
+        final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
+        int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
+        String type = file.getContentType().substring(idx+1);
+        String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
+
         if(menuData.isPresent()){
             Menu menu = menuData.get();
 
@@ -103,9 +109,15 @@ public class MenuServiceImpl implements MenuService{
             menu.setMenuName(menuRequestDto.getMenuName());
             menu.setMenuDesc(menuRequestDto.getMenuDesc());
             menu.setMenuPrice(menuRequestDto.getMenuPrice());
-            menu.setImageName(menuRequestDto.getImageName());
-            menu.setImageUrl(menuRequestDto.getImageUrl());
+            menu.setImageName(serverfilename);
+            menu.setImageUrl(UPLOAD_PATH+serverfilename);
             menu.setStore(store1);
+
+            try {
+                file.transferTo(new File(UPLOAD_PATH+serverfilename));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             menuRepository.save(menu);
             return new MenuReturnDto(menu);
