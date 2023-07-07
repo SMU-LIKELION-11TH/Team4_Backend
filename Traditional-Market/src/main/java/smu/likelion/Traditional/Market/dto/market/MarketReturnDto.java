@@ -19,8 +19,6 @@ public class MarketReturnDto {
 
     private String marketDesc;
 
-    //private String marketImageUrl;
-
     private List<CategoryReturnDto> categoryList;
 
 
@@ -29,7 +27,6 @@ public class MarketReturnDto {
         this.marketName = market.getMarketName();
         this.marketAddress = market.getMarketAddress();
         this.marketDesc = market.getMarketDesc();
-        //this.marketImageUrl = marketImageUrl;
         this.categoryList = market.getCategoryList().stream().map(CategoryReturnDto::new).collect(Collectors.toList());
     }
 }

@@ -2,7 +2,6 @@ package smu.likelion.Traditional.Market.dto.user;
 
 import lombok.Getter;
 import lombok.Setter;
-import smu.likelion.Traditional.Market.domain.enums.Role;
 
 @Getter
 @Setter

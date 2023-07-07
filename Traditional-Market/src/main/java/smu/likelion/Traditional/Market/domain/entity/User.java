@@ -2,7 +2,6 @@ package smu.likelion.Traditional.Market.domain.entity;
 
 import lombok.*;
 import smu.likelion.Traditional.Market.domain.enums.Role;
-import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
 
 import javax.persistence.*;
 

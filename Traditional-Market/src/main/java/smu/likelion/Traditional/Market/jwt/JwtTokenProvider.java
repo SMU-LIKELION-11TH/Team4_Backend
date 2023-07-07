@@ -2,20 +2,18 @@ package smu.likelion.Traditional.Market.jwt;
 
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.OAuth2ResourceServerProperties;
 import org.springframework.stereotype.Component;
-import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JwtTokenProvider {
 
     private String secretKey;
     private Long validityInMilliseconds;
+
+    private static final String AUTHORITIES_KEY = "auth";
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey, @Value("${security.jwt.token.expire-length}") Long validityInMilliseconds){
         this.secretKey = secretKey;
@@ -49,7 +47,7 @@ public class JwtTokenProvider {
 
     //토큰 해석해서 Map 형태로 내용 추출
     public Map<String, Object> getSubject(String token){
-        Claims claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        Claims claims = parseClaims(token);
         return claims;
     }
 
@@ -63,6 +61,14 @@ public class JwtTokenProvider {
             return true;
         } catch (JwtException | IllegalArgumentException e){
             return false;
+        }
+    }
+
+    private Claims parseClaims(String token){
+        try{
+            return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e){
+            return e.getClaims();
         }
     }
 }

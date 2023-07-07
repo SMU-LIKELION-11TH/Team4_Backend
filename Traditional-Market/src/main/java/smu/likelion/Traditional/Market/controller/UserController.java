@@ -1,9 +1,8 @@
 package smu.likelion.Traditional.Market.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import smu.likelion.Traditional.Market.domain.entity.User;
-import smu.likelion.Traditional.Market.domain.enums.Role;
 import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
 import smu.likelion.Traditional.Market.dto.user.UserReturnDto;
 import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
@@ -11,6 +10,7 @@ import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 public class UserController {
@@ -21,6 +21,7 @@ public class UserController {
         this.jwtTokenProvider = jwtTokenProvider;
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public String login(@RequestBody UserRequestDto userRequestDto){
         //db에서 id 찾아서 userRequestDto에 넣어주기

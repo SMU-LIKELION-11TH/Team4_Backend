@@ -9,11 +9,11 @@ import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
+import smu.likelion.Traditional.Market.jwt.JwtUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -30,8 +30,7 @@ public class MarketController {
     @PostMapping(value = "/markets")
     public ResponseEntity<?> createMarket(@RequestBody MarketRequestDto marketRequestDto, HttpServletRequest request){
         try{
-            Map<String, Object> claims = (Map<String, Object>) request.getAttribute("claims");
-            String role = (String) claims.get("role");
+            String role = JwtUtil.getBody(request);
             if(role.equals("ADMIN")){
                 Optional<Market> marketOptional = marketService.findByMarketName(marketRequestDto.getMarketName());
                 if(marketOptional.isPresent()){
@@ -53,7 +52,6 @@ public class MarketController {
             List<Market> marketList = marketService.findAll();
             List<MarketReturnDto> marketReturnDtoList = new ArrayList<>();
             for (Market market : marketList){
-                //String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
                 marketReturnDtoList.add(new MarketReturnDto(market));
             }
             return ResponseEntity.ok(marketReturnDtoList);
@@ -69,7 +67,6 @@ public class MarketController {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
-                //String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
                 market.setCategoryList(categoryService.findByMarketId(id));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
@@ -86,7 +83,6 @@ public class MarketController {
             Optional<Market> marketOptional = marketService.findByMarketName(marketName);
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
-                //String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
                 market.setCategoryList(categoryService.findByMarketId(market.getId()));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
@@ -103,9 +99,6 @@ public class MarketController {
         try {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
-                //Market market = marketOptional.get();
-                //imageService.deleteFile(market.getStoreFilename());
-                //UploadFile uploadFile = imageService.storeFile(image);
                 if(marketService.update(id, marketRequestDto)){
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
@@ -124,9 +117,7 @@ public class MarketController {
         try {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
-                //Market market = marketOptional.get();
                 marketService.delete(id);
-                //imageService.deleteFile(market.getStoreFilename());
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

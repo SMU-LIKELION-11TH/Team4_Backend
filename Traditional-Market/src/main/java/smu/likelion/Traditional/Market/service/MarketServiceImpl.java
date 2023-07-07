@@ -65,8 +65,6 @@ public class MarketServiceImpl implements MarketService{
                 market.setMarketName(marketRequestDto.getMarketName());
                 market.setMarketAddress(marketRequestDto.getMarketAddress());
                 market.setMarketDesc(marketRequestDto.getMarketDesc());
-//                market.setUploadFilename(uploadFile.getUploadFilename());
-//                market.setStoreFilename(uploadFile.getStoreFilename());
                 marketRepository.save(market);
                 return true;
             }
