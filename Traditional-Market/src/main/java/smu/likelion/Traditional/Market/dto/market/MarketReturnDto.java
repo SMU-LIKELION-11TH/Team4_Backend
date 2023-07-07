@@ -2,8 +2,7 @@ package smu.likelion.Traditional.Market.dto.market;
 
 import lombok.Getter;
 import lombok.Setter;
-import smu.likelion.Traditional.Market.domain.Category;
-import smu.likelion.Traditional.Market.domain.Market;
+import smu.likelion.Traditional.Market.domain.entity.Market;
 import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
 
 import java.util.List;

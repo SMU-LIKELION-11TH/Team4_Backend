@@ -1,4 +1,4 @@
-package smu.likelion.Traditional.Market.domain;
+package smu.likelion.Traditional.Market.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

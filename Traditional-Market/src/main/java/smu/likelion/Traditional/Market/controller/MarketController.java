@@ -6,16 +6,18 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import smu.likelion.Traditional.Market.domain.Market;
-import smu.likelion.Traditional.Market.domain.UploadFile;
+import smu.likelion.Traditional.Market.domain.entity.Market;
+import smu.likelion.Traditional.Market.domain.entity.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 import smu.likelion.Traditional.Market.service.ImageServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -33,11 +35,16 @@ public class MarketController {
 
     //사용자 인증 필요
     @PostMapping(value = "/markets", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createMarket(@RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image){
+    public ResponseEntity<?> createMarket(@RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image, HttpServletRequest request){
         try{
-            UploadFile uploadFile = imageService.storeFile(image);
-            marketService.save(marketRequestDto, uploadFile);
-            return new ResponseEntity<>(HttpStatus.OK);
+            Map<String, Object> claims = (Map<String, Object>) request.getAttribute("claims");
+            String role = (String) claims.get("role");
+            if(role.equals("ADMIN")){
+                UploadFile uploadFile = imageService.storeFile(image);
+                marketService.save(marketRequestDto, uploadFile);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         } catch (Exception e){
             e.printStackTrace();
         }

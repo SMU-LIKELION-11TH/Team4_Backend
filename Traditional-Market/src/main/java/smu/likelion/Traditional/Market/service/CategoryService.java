@@ -1,6 +1,6 @@
 package smu.likelion.Traditional.Market.service;
 
-import smu.likelion.Traditional.Market.domain.Category;
+import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package smu.likelion.Traditional.Market.domain;
+package smu.likelion.Traditional.Market.domain.entity;
 
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter @Setter
 @Entity

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import smu.likelion.Traditional.Market.domain.Category;
+import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;

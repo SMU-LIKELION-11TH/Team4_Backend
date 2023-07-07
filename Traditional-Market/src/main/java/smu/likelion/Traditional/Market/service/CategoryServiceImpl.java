@@ -2,16 +2,14 @@ package smu.likelion.Traditional.Market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import smu.likelion.Traditional.Market.domain.Category;
-import smu.likelion.Traditional.Market.domain.Market;
+import smu.likelion.Traditional.Market.domain.entity.Category;
+import smu.likelion.Traditional.Market.domain.entity.Market;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
-import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.MarketRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class CategoryServiceImpl implements CategoryService{

@@ -15,6 +15,9 @@ spring:
         show_sql: 'true'
     show-sql: 'true'
     hibernate:
-      ddl-auto: none
-#imgLocation: /Users/jiyun/Documents/git/Team4_Backend/Traditional-Market/images/
-#uploadPath: file:///Users/jiyun/Documents/git/Team4_Backend/Traditional-Market/images/
+      ddl-auto: update
+security:
+  jwt:
+    token:
+      secret-key: 46726836487
+      expire-length: 3600000

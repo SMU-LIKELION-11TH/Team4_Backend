@@ -2,8 +2,8 @@ package smu.likelion.Traditional.Market.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import smu.likelion.Traditional.Market.domain.Market;
-import smu.likelion.Traditional.Market.domain.UploadFile;
+import smu.likelion.Traditional.Market.domain.entity.Market;
+import smu.likelion.Traditional.Market.domain.entity.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.repository.MarketRepository;
 
