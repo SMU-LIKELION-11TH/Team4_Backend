@@ -45,13 +45,15 @@ public class MenuController {
         return ResponseEntity.ok(menuReturnDto);
     }
 
-    @PutMapping("/store/{storeid}/menu/{menuid}")
-    public ResponseEntity<MenuReturnDto> updateMenuById(@PathVariable("storeid") Long id, @RequestBody MenuRequestDto menuRequestDto) {
-        MenuReturnDto MenuReturnDto = menuService.update(id,menuRequestDto);
+    @PutMapping("/store/{storeid}/menus/{menuid}")
+    public ResponseEntity<MenuReturnDto> updateMenuById(@PathVariable("storeid") Long id, @PathVariable("menuid") Long menuid,
+                                                        @RequestPart("menuRequestDto") MenuRequestDto menuRequestDto,
+                                                        @RequestPart(value = "file", required = false) MultipartFile file) {
+        MenuReturnDto MenuReturnDto = menuService.update(menuid,menuRequestDto,file);
         return ResponseEntity.ok(MenuReturnDto);
     }
 
-    @DeleteMapping("/store/{storeid}/menu")
+    @DeleteMapping("/store/{storeid}/menus")
     public ResponseEntity<HttpStatus> deleteMenu(@RequestParam("menuid") Long id){
         try{
             menuService.delete(id);

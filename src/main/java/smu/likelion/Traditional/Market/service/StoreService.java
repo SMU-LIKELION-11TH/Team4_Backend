@@ -17,7 +17,7 @@ public interface StoreService {
     public StoreReturnDto save(List<MultipartFile> multipartFiles, StoreRequestDto storeRequestDto);
     public List<StoreReturnDto> findAll();
     public StoreReturnDto findById(Long id);
-    public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto);
+    public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto, List<MultipartFile> multipartFiles);
     public void delete(Long id);
 
 

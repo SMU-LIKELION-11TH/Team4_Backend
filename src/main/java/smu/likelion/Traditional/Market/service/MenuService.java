@@ -18,6 +18,6 @@ public interface MenuService {
     public MenuReturnDto save(MultipartFile file, MenuRequestDto menuRequestDto);
     public List<MenuReturnDto> findByAll();
     public MenuReturnDto findById(Long id);
-    public MenuReturnDto update(Long id, MenuRequestDto menuRequestDto);
+    public MenuReturnDto update(Long id, MenuRequestDto menuRequestDto,MultipartFile file);
     public void delete(Long id);
 }

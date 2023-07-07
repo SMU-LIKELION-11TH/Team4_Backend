@@ -48,8 +48,10 @@ public class StoreController {
     }
 
     @PutMapping("/stores/{storeid}")
-    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id, @RequestBody StoreRequestDto storeRequestDto) {
-        StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto);
+    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id,
+                                                          @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
+                                                          @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto) {
+        StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto,multipartFiles);
         return ResponseEntity.ok(storeReturnDto);
     }
 

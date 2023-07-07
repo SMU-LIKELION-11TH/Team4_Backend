@@ -121,36 +121,45 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
-    public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto) {
+    public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto,List<MultipartFile> multipartFiles ) {
         try {
             Optional<Store> storeData = storeRepository.findById(id);
             System.out.println(storeData);
+            String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
+            final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             if(storeData.isPresent()){
                 Store store = storeData.get();
 
                 Optional<Category> category = categoryRepository.findById(store.getCategory().getId());
                 Category category1 = category.get();
-                System.out.println(category1);
-                System.out.println(storeRequestDto.getStoreAddress());
-                System.out.println(storeRequestDto.getStoreName());
-
-//                Store Editstore = store.builder()
-//                        .storeName("새로운 store이름입니다.")
-//                        .storeDesc(storeRequestDto.getStoreDesc())
-//                        .storeAddress("새로운 address입니다.")
-//                        .storeTime(storeRequestDto.getStoreTime())
-//                        .storeTel(storeRequestDto.getStoreTel())
-//                        .storeImageList(storeRequestDto.getStoreImageList())
-//                        .menuList(storeRequestDto.getMenuList()) //얘 수정을 해야함 이유 : 아까 민수형이 말했 듯이 store전체를 가져오는게 아니라 일부만 가져오는 것임.
-//                        .category(category1)
-//                        .build();
-//                store객체를 꺼내오고 거기에 데
-                store.setStoreName("새로운 store이름입니다.");
+                store.setStoreName(storeRequestDto.getStoreName());
                 store.setStoreDesc(storeRequestDto.getStoreDesc());
                 store.setStoreTel(storeRequestDto.getStoreTel());
                 store.setStoreTime(storeRequestDto.getStoreTime());
-                store.setStoreAddress("새로운 store주소 입니다.");
+                store.setStoreAddress(storeRequestDto.getStoreAddress());
                 store.setCategory(category1);
+
+
+                List<StoreImage> storeImageList = storeImageRepository.findByStore_Id(store.getId());
+                for(int i = 0; i < multipartFiles.size(); i++){
+                    MultipartFile file = multipartFiles.get(i);
+                    int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
+                    String type = file.getContentType().substring(idx+1);
+                    String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
+
+
+                    StoreImage storeImage = storeImageList.get(i);//1개 가져오기
+                    file.transferTo(new File(UPLOAD_PATH+serverfilename));
+
+                    storeImage.setStoreFilename(serverfilename);
+                    storeImage.setStoreImageUrl(UPLOAD_PATH+serverfilename);
+                    storeImage.setStore(store);
+
+                    storeImageRepository.save(storeImage);
+
+                }
+
+
 
 
                 storeRepository.save(store);
