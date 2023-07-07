@@ -15,6 +15,8 @@ public interface MarketService {
 
     public Optional<Market> findById(Long id);
 
+    public Optional<Market> findByMarketName(String marketName);
+
     public boolean update(Long id, MarketRequestDto marketRequestDto, UploadFile uploadFile);
 
     public void delete(Long id);

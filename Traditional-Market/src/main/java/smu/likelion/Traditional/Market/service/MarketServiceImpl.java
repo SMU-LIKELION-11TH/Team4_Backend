@@ -48,6 +48,16 @@ public class MarketServiceImpl implements MarketService{
     }
 
     @Override
+    public Optional<Market> findByMarketName(String marketName){
+        try {
+            return marketRepository.findByMarketName(marketName);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public boolean update(Long id, MarketRequestDto marketRequestDto, UploadFile uploadFile){
         try {
             Optional<Market> marketOptional = marketRepository.findById(id);
@@ -56,8 +66,8 @@ public class MarketServiceImpl implements MarketService{
                 market.setMarketName(marketRequestDto.getMarketName());
                 market.setMarketAddress(marketRequestDto.getMarketAddress());
                 market.setMarketDesc(marketRequestDto.getMarketDesc());
-                market.setUploadFilename(uploadFile.getUploadFilename());
-                market.setStoreFilename(uploadFile.getStoreFilename());
+//                market.setUploadFilename(uploadFile.getUploadFilename());
+//                market.setStoreFilename(uploadFile.getStoreFilename());
                 marketRepository.save(market);
                 return true;
             }

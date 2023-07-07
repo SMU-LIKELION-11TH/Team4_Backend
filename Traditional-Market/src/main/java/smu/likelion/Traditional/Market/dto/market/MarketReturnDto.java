@@ -19,19 +19,17 @@ public class MarketReturnDto {
 
     private String marketDesc;
 
-    //private String marketImageBase64;
-
-    private String marketImageUrl;
+    //private String marketImageUrl;
 
     private List<CategoryReturnDto> categoryList;
 
 
-    public MarketReturnDto(Market market, String marketImageUrl){
+    public MarketReturnDto(Market market){
         this.id = market.getId();
         this.marketName = market.getMarketName();
         this.marketAddress = market.getMarketAddress();
         this.marketDesc = market.getMarketDesc();
-        this.marketImageUrl = marketImageUrl;
+        //this.marketImageUrl = marketImageUrl;
         this.categoryList = market.getCategoryList().stream().map(CategoryReturnDto::new).collect(Collectors.toList());
     }
 }
