@@ -1,12 +1,11 @@
 package smu.likelion.Traditional.Market.dto.store;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import smu.likelion.Traditional.Market.domain.Category;
-import smu.likelion.Traditional.Market.domain.Menu;
-import smu.likelion.Traditional.Market.domain.Store;
-import smu.likelion.Traditional.Market.domain.StoreImage;
+import smu.likelion.Traditional.Market.domain.entity.Category;
+import smu.likelion.Traditional.Market.domain.entity.Menu;
+import smu.likelion.Traditional.Market.domain.entity.Store;
+import smu.likelion.Traditional.Market.domain.entity.StoreImage;
 
 import java.util.List;
 

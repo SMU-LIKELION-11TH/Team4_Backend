@@ -1,11 +1,9 @@
-package smu.likelion.Traditional.Market.domain;
+package smu.likelion.Traditional.Market.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.istack.NotNull;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Getter
 @Setter

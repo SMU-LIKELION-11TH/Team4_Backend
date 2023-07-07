@@ -1,10 +1,8 @@
 package smu.likelion.Traditional.Market.dto.storeimage;
 
 import lombok.*;
-import smu.likelion.Traditional.Market.domain.Store;
-import smu.likelion.Traditional.Market.domain.StoreImage;
-
-import java.util.List;
+import smu.likelion.Traditional.Market.domain.entity.Store;
+import smu.likelion.Traditional.Market.domain.entity.StoreImage;
 
 @Getter
 @Setter

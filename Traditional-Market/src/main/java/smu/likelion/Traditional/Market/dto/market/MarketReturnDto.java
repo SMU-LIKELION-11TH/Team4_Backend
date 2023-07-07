@@ -25,6 +25,7 @@ public class MarketReturnDto {
 
     private List<CategoryReturnDto> categoryList;
 
+
     public MarketReturnDto(Market market, String marketImageUrl){
         this.id = market.getId();
         this.marketName = market.getMarketName();

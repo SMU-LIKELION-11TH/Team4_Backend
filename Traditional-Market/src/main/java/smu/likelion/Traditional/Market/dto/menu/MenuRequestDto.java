@@ -3,8 +3,8 @@ package smu.likelion.Traditional.Market.dto.menu;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import smu.likelion.Traditional.Market.domain.Menu;
-import smu.likelion.Traditional.Market.domain.Store;
+import smu.likelion.Traditional.Market.domain.entity.Menu;
+import smu.likelion.Traditional.Market.domain.entity.Store;
 
 @Getter
 @Setter

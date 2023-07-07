@@ -3,21 +3,18 @@ package smu.likelion.Traditional.Market.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import smu.likelion.Traditional.Market.domain.Category;
-import smu.likelion.Traditional.Market.domain.Store;
-import smu.likelion.Traditional.Market.domain.StoreImage;
+import smu.likelion.Traditional.Market.domain.entity.Category;
+import smu.likelion.Traditional.Market.domain.entity.Store;
+import smu.likelion.Traditional.Market.domain.entity.StoreImage;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
-import smu.likelion.Traditional.Market.dto.storeimage.StoreImageRequestDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

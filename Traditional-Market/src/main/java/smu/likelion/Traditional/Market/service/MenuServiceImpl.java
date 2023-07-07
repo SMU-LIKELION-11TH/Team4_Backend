@@ -3,16 +3,13 @@ package smu.likelion.Traditional.Market.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import smu.likelion.Traditional.Market.domain.Category;
-import smu.likelion.Traditional.Market.domain.Menu;
-import smu.likelion.Traditional.Market.domain.Store;
+import smu.likelion.Traditional.Market.domain.entity.Menu;
+import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
-import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.repository.MenuRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
