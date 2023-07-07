@@ -4,8 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.Category;
 import smu.likelion.Traditional.Market.domain.Market;
+import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class MarketReturnDto {
@@ -22,7 +24,7 @@ public class MarketReturnDto {
 
     private String marketImageUrl;
 
-    private List<Category> categoryList;
+    private List<CategoryReturnDto> categoryList;
 
     public MarketReturnDto(Market market, String marketImageUrl){
         this.id = market.getId();
@@ -30,6 +32,6 @@ public class MarketReturnDto {
         this.marketAddress = market.getMarketAddress();
         this.marketDesc = market.getMarketDesc();
         this.marketImageUrl = marketImageUrl;
-        //this.categoryList = market.getCategoryList();
+        this.categoryList = market.getCategoryList().stream().map(CategoryReturnDto::new).collect(Collectors.toList());
     }
 }

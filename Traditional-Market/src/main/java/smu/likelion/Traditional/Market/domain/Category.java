@@ -8,6 +8,7 @@ import lombok.Setter;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter @Setter
 @Entity
@@ -29,6 +30,9 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "market_id")
     private Market market;
+
+    //@OneToMany(mappedBy = "category")
+    //private List<Store> storeList;
 
     public Category(CategoryRequestDto categoryRequestDto, Market market){
         this.categoryName = categoryRequestDto.getCategoryName();

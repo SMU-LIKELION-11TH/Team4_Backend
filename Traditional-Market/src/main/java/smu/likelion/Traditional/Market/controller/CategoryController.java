@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smu.likelion.Traditional.Market.domain.Category;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -35,7 +37,8 @@ public class CategoryController {
     @GetMapping("/category")
     public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
         try{
-            return ResponseEntity.ok(categoryService.findByMarketId(marketId));
+            List<Category> categoryList = categoryService.findByMarketId(marketId);
+            return ResponseEntity.ok(categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList()));
         } catch (Exception e){
             e.printStackTrace();
         }

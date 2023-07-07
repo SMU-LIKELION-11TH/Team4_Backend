@@ -10,6 +10,8 @@ public class CategoryReturnDto {
 
     private String categoryName;
 
+    //private List<Store> storeList;
+
     public CategoryReturnDto(Category category) {
         this.id = category.getId();
         this.categoryName = category.getCategoryName();

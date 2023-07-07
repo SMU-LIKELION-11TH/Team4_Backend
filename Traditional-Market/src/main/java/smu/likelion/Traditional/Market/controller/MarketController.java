@@ -10,6 +10,7 @@ import smu.likelion.Traditional.Market.domain.Market;
 import smu.likelion.Traditional.Market.domain.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
+import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 import smu.likelion.Traditional.Market.service.ImageServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
 
@@ -23,6 +24,9 @@ public class MarketController {
 
     @Autowired
     MarketServiceImpl marketService;
+
+    @Autowired
+    CategoryServiceImpl categoryService;
 
     @Autowired
     ImageServiceImpl imageService;
@@ -63,6 +67,7 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 String marketImageUrl = imageService.getFullPath(market.getStoreFilename());
+                market.setCategoryList(categoryService.findByMarketId(id));
                 return ResponseEntity.ok(new MarketReturnDto(market, marketImageUrl));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
