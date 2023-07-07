@@ -43,7 +43,7 @@ public class Market {
     @OneToMany(mappedBy = "market")
     private List<Category> categoryList;
 
-    public Market(MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public Market(MarketRequestDto marketRequestDto){
         this.marketName = marketRequestDto.getMarketName();
         this.marketAddress = marketRequestDto.getMarketAddress();
         this.marketDesc = marketRequestDto.getMarketDesc();

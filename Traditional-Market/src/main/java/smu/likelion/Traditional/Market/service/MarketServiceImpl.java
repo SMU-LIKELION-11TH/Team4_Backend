@@ -3,7 +3,6 @@ package smu.likelion.Traditional.Market.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smu.likelion.Traditional.Market.domain.entity.Market;
-import smu.likelion.Traditional.Market.domain.entity.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.repository.MarketRepository;
 
@@ -17,9 +16,9 @@ public class MarketServiceImpl implements MarketService{
     private MarketRepository marketRepository;
 
     @Override
-    public void save(MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public void save(MarketRequestDto marketRequestDto){
         try{
-            marketRepository.save(new Market(marketRequestDto, uploadFile));
+            marketRepository.save(new Market(marketRequestDto));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -58,7 +57,7 @@ public class MarketServiceImpl implements MarketService{
     }
 
     @Override
-    public boolean update(Long id, MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public boolean update(Long id, MarketRequestDto marketRequestDto){
         try {
             Optional<Market> marketOptional = marketRepository.findById(id);
             if(marketOptional.isPresent()){

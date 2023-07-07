@@ -2,22 +2,15 @@ package smu.likelion.Traditional.Market.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.util.UriComponentsBuilder;
 import smu.likelion.Traditional.Market.domain.entity.Market;
-import smu.likelion.Traditional.Market.domain.entity.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
-import smu.likelion.Traditional.Market.service.ImageServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,18 +26,18 @@ public class MarketController {
     @Autowired
     CategoryServiceImpl categoryService;
 
-    @Autowired
-    ImageServiceImpl imageService;
-
     //사용자 인증 필요
-    @PostMapping(value = "/markets", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<?> createMarket(@RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image, HttpServletRequest request){
+    @PostMapping(value = "/markets")
+    public ResponseEntity<?> createMarket(@RequestBody MarketRequestDto marketRequestDto, HttpServletRequest request){
         try{
             Map<String, Object> claims = (Map<String, Object>) request.getAttribute("claims");
             String role = (String) claims.get("role");
             if(role.equals("ADMIN")){
-                UploadFile uploadFile = imageService.storeFile(image);
-                marketService.save(marketRequestDto, uploadFile);
+                Optional<Market> marketOptional = marketService.findByMarketName(marketRequestDto.getMarketName());
+                if(marketOptional.isPresent()){
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
+                }
+                marketService.save(marketRequestDto);
                 return new ResponseEntity<>(HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -106,14 +99,14 @@ public class MarketController {
 
     //사용자 인증 필요
     @PutMapping("/markets/{id}")
-    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, @RequestPart MarketRequestDto marketRequestDto, @RequestPart MultipartFile image){
+    public ResponseEntity<?> updateMarket(@PathVariable("id") Long id, @RequestBody MarketRequestDto marketRequestDto){
         try {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
                 //Market market = marketOptional.get();
                 //imageService.deleteFile(market.getStoreFilename());
-                UploadFile uploadFile = imageService.storeFile(image);
-                if(marketService.update(id, marketRequestDto, uploadFile)){
+                //UploadFile uploadFile = imageService.storeFile(image);
+                if(marketService.update(id, marketRequestDto)){
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
