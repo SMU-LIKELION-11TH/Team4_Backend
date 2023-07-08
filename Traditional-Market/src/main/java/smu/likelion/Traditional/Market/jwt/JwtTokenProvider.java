@@ -39,6 +39,8 @@ public class JwtTokenProvider {
         Role role = user.getRole();
         if(role == Role.ADMIN) {
             payloads.put("Auth", "ROLE_ADMIN");
+        } else if(role == Role.CEO){
+            payloads.put("Auth", "ROLE_CEO");
         } else {
             payloads.put("Auth", "ROLE_USER");
         }
