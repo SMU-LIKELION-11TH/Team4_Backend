@@ -20,5 +20,4 @@ public class UserRequestDto {
                 .saveFilename(saveFilename)
                 .build();
     }
-
 }

@@ -15,4 +15,9 @@ spring:
         show_sql: 'true'
     show-sql: 'true'
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
+security:
+  jwt:
+    token:
+      secret-key: 46726836487
+      expire-length: 3600000

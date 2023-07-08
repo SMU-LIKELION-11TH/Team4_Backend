@@ -1,6 +1,5 @@
 package smu.likelion.Traditional.Market.domain.entity;
 
-import com.sun.istack.NotNull;
 import lombok.*;
 import smu.likelion.Traditional.Market.domain.enums.Role;
 
@@ -70,3 +69,4 @@ public class User extends BaseEntity {
         this.reviews.add(review);
     }
 }
+
