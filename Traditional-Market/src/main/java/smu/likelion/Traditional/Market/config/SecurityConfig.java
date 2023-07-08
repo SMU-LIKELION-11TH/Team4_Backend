@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -40,13 +39,13 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-                //.anyRequest().permitAll()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/markets/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/stores/**").permitAll()
-                .antMatchers("/api/stores/**").hasRole("CEO")
-                //.anyRequest().hasRole("ADMIN")
+//                .antMatchers("/api/login").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/markets/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll()
+//                .antMatchers(HttpMethod.GET, "/api/stores/**").permitAll()
+//                .antMatchers("/api/stores/**").hasRole("CEO")
+//                .anyRequest().hasRole("ADMIN")
+                .anyRequest().permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));

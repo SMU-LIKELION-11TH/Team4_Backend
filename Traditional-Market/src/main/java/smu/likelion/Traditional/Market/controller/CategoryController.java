@@ -33,11 +33,9 @@ public class CategoryController {
         return null;
     }
 
-    //bad request 추가하기
     @GetMapping("/category")
     public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
         try{
-            //return ResponseEntity.ok(categoryService.findByMarketId(marketId));
             List<Category> categoryList = categoryService.findByMarketId(marketId);
             return ResponseEntity.ok(categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList()));
         } catch (Exception e){
@@ -45,6 +43,21 @@ public class CategoryController {
         }
         return null;
     }
+
+//    @GetMapping("/category")
+//    public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketName(@RequestParam("marketName") String marketName){
+//        try{
+//            Optional<Market> marketOptional = marketService.findByMarketName(marketName);
+//            if(marketOptional.isPresent()){
+//                List<Category> categoryList = categoryService.findByMarketId(marketOptional.get().getId());
+//                return ResponseEntity.ok(categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList()));
+//            }
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
 
     //사용자 인증 필요
     @PutMapping("/category/{id}")

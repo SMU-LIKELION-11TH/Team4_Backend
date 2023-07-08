@@ -39,8 +39,6 @@ public class CategoryServiceImpl implements CategoryService{
     public List<Category> findByMarketId(Long marketId){
         try{
             return categoryRepository.findByMarketId(marketId);
-            //List<Category> categoryList = categoryRepository.findByMarketId(marketId);
-            //return categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList());
         } catch (Exception e){
             e.printStackTrace();
         }

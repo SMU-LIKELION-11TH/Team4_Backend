@@ -62,8 +62,6 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(id));
-                //MarketReturnDto marketReturnDto = new MarketReturnDto(market);
-                //marketReturnDto.setCategoryList(categoryService.findByMarketId(id));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,8 +78,6 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(market.getId()));
-                //MarketReturnDto marketReturnDto = new MarketReturnDto(market);
-                //marketReturnDto.setCategoryList(categoryService.findByMarketId(market.getId()));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -97,10 +93,14 @@ public class MarketController {
         try {
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
+                Optional<Market> marketConflict = marketService.findByMarketName(marketRequestDto.getMarketName());
+                //그 이름이 이미 존재하고, 그 이름이 원래의 이름이 아닐 경우
+                if(marketConflict.isPresent() && !marketConflict.get().getMarketName().equals(marketOptional.get().getMarketName())){
+                    return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
+                }
                 if(marketService.update(id, marketRequestDto)){
                     return new ResponseEntity<>(HttpStatus.OK);
                 }
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
