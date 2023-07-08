@@ -1,11 +1,10 @@
 package smu.likelion.Traditional.Market.dto.user;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import smu.likelion.Traditional.Market.domain.entity.User;
 
 @Getter @Setter
+@NoArgsConstructor
 public class UserRequestDto {
     private String nickname;
 
@@ -14,11 +13,11 @@ public class UserRequestDto {
         this.nickname = nickname;
     }
 
-    public User toEntity(String uploadImg, String saveImg) {
+    public User toEntity(String uploadFilename, String saveFilename) {
         return User.builder()
                 .nickname(this.nickname)
-                .uploadImg(uploadImg)
-                .saveImg(saveImg)
+                .uploadFilename(uploadFilename)
+                .saveFilename(saveFilename)
                 .build();
     }
 

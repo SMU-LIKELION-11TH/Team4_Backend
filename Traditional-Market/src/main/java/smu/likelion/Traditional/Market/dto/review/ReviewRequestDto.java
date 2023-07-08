@@ -11,7 +11,7 @@ import smu.likelion.Traditional.Market.domain.entity.User;
 public class ReviewRequestDto {
     private int stars;
     private String content;
-    private String email;
+    private String email; // spring security
 
     @Builder
     public ReviewRequestDto(int stars, String content, String email) {

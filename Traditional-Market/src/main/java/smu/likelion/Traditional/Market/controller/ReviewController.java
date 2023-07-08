@@ -19,7 +19,7 @@ public class ReviewController {
 
     @GetMapping("/{storeId}/reviews")
     public ResponseEntity<List<ReviewReturnDto>> getStoreReviewList(@PathVariable Long storeId,
-                                                                    @RequestParam String sort) {
+                                                                    @RequestParam(required = false) String sort) {
         try {
             List<ReviewReturnDto> reviews = reviewService.getStoreReviewList(storeId, sort);
             return ResponseEntity.ok(reviews);

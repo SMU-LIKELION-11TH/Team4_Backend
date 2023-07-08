@@ -66,7 +66,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewReturnDto createReview(Long storeId, ReviewRequestDto dto) {
-        User user = findUser(dto.getEmail());
+        User user = findUser(dto.getEmail()); // spring security
         Store store = findStore(storeId);
 
         Review review = dto.toEntity(store, user);
@@ -84,7 +84,7 @@ public class ReviewServiceImpl implements ReviewService {
         review.update(dto.getStars(), dto.getContent());
 
         return ReviewReturnDto.builder()
-                .entity(review)
+                .entity(reviewRepository.save(review))
                 .build();
     }
 

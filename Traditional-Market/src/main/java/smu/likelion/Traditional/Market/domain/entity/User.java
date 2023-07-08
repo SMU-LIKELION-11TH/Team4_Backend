@@ -24,9 +24,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "api_key")
-    private String apiKey;
-
     @Column(nullable = false)
     private String nickname;
 
@@ -36,30 +33,36 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
-    @Column(name = "upload_img", nullable = false)
-    private String uploadImg;
+    @Column(name = "upload_filename")
+    private String uploadFilename;
 
-    @Column(name = "save_img", nullable = false)
-    private String saveImg;
+    @Column(name = "save_filename")
+    private String saveFilename;
 
     @Builder
-    public User(String email, String password, String nickname, Role role, String uploadImg, String saveImg) {
+    public User(String email, String password, String nickname, Role role, String uploadFilename, String saveFilename) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
-        this.uploadImg = uploadImg;
-        this.saveImg = saveImg;
+        this.uploadFilename = uploadFilename;
+        this.saveFilename = saveFilename;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
 
+    public void update(String nickname, String uploadFilename, String saveFilename) {
+        this.nickname = nickname;
+        this.uploadFilename = uploadFilename;
+        this.saveFilename = saveFilename;
+    }
+    public void update(String uploadFilename, String saveFilename) {
+        this.uploadFilename = uploadFilename;
+        this.saveFilename = saveFilename;
+    }
     public void update(String nickname) {
         this.nickname = nickname;
     }
