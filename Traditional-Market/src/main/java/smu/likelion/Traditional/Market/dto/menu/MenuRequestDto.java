@@ -17,6 +17,9 @@ public class MenuRequestDto {
     private String imageUrl;
     private Long storeId;
 
+    public MenuRequestDto(){
+        
+    }
     public Menu toEntity(Store store){
         return Menu.builder()
                 .menuName(this.menuName)
