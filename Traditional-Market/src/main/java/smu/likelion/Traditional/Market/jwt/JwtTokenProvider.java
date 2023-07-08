@@ -37,7 +37,7 @@ public class JwtTokenProvider {
         payloads.put("email", user.getEmail());
 
         Role role = user.getRole();
-        if(role.equals("ADMIN")) {
+        if(role == Role.ADMIN) {
             payloads.put("Auth", "ROLE_ADMIN");
         } else {
             payloads.put("Auth", "ROLE_USER");

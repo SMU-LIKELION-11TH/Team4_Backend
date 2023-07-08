@@ -6,6 +6,10 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * security 적용 전에 사용했던 클래스입니다.
+ * 현재로써는 사용하는 곳이 없는데, 이후에 필요 없다고 판단되면 삭제하도록 하겠습니다.
+ * */
 @Component
 public class JwtUtil {
 

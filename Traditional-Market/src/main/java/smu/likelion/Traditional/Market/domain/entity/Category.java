@@ -29,7 +29,7 @@ public class Category {
     @JoinColumn(name = "market_id")
     private Market market;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
     private List<Store> storeList = new ArrayList<>();
 
     @Builder

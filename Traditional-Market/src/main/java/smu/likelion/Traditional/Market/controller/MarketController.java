@@ -9,9 +9,7 @@ import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 import smu.likelion.Traditional.Market.service.MarketServiceImpl;
-import smu.likelion.Traditional.Market.jwt.JwtUtil;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +25,7 @@ public class MarketController {
     CategoryServiceImpl categoryService;
 
     //사용자 인증 필요
-    @PostMapping(value = "/markets")
+    @PostMapping("/markets")
     public ResponseEntity<?> createMarket(@RequestBody MarketRequestDto marketRequestDto){
         try{
             Optional<Market> marketOptional = marketService.findByMarketName(marketRequestDto.getMarketName());
@@ -64,6 +62,8 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(id));
+                //MarketReturnDto marketReturnDto = new MarketReturnDto(market);
+                //marketReturnDto.setCategoryList(categoryService.findByMarketId(id));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -80,6 +80,8 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(market.getId()));
+                //MarketReturnDto marketReturnDto = new MarketReturnDto(market);
+                //marketReturnDto.setCategoryList(categoryService.findByMarketId(market.getId()));
                 return ResponseEntity.ok(new MarketReturnDto(market));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

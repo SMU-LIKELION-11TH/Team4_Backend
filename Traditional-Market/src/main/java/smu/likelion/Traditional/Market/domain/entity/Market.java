@@ -8,6 +8,7 @@ import lombok.Setter;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -34,8 +35,8 @@ public class Market {
     @Column(name = "market_desc")
     private String marketDesc;
 
-    @OneToMany(mappedBy = "market")
-    private List<Category> categoryList;
+    @OneToMany(mappedBy = "market", fetch = FetchType.EAGER)
+    private List<Category> categoryList = new ArrayList<>();
 
     public Market(MarketRequestDto marketRequestDto){
         this.marketName = marketRequestDto.getMarketName();

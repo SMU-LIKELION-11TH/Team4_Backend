@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import smu.likelion.Traditional.Market.jwt.JwtAccessDeniedHandler;
@@ -22,13 +23,15 @@ public class SecurityConfig {
         http.csrf().disable()
 
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint) //401: 유저 정보 없이 접근
+                .accessDeniedHandler(jwtAccessDeniedHandler) //403: 접근 권한이 없음
 
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
-                //.anyRequest().authenticated()
+                .antMatchers(HttpMethod.GET, "/api/markets/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll()
+                .anyRequest().hasRole("ADMIN")
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));

@@ -26,22 +26,12 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = resolveToken(request);
 
         if(StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-            System.out.println("valid token");
+            //System.out.println("valid token");
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
-
-//            //여기에서 권한 확인하면 되지 않을까?
-//            String role = JwtUtil.getBody(request);
-//            if(role.equals("ADMIN")){
-//                authentication.setAuthenticated(true);
-//            }
-
-    //        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //        User user = (User) authentication.getPrincipal();
-    //        user.getRole();
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
         } else{
-            System.out.println("invalid token");
+            //System.out.println("invalid token");
             SecurityContextHolder.getContext().setAuthentication(null);
         }
 
