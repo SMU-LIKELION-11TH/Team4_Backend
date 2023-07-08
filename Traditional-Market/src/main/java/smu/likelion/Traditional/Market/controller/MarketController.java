@@ -28,18 +28,14 @@ public class MarketController {
 
     //사용자 인증 필요
     @PostMapping(value = "/markets")
-    public ResponseEntity<?> createMarket(@RequestBody MarketRequestDto marketRequestDto, HttpServletRequest request){
+    public ResponseEntity<?> createMarket(@RequestBody MarketRequestDto marketRequestDto){
         try{
-            String role = JwtUtil.getBody(request);
-            if(role.equals("ADMIN")){
-                Optional<Market> marketOptional = marketService.findByMarketName(marketRequestDto.getMarketName());
-                if(marketOptional.isPresent()){
-                    return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
-                }
-                marketService.save(marketRequestDto);
-                return new ResponseEntity<>(HttpStatus.OK);
+            Optional<Market> marketOptional = marketService.findByMarketName(marketRequestDto.getMarketName());
+            if(marketOptional.isPresent()){
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
             }
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            marketService.save(marketRequestDto);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e){
             e.printStackTrace();
         }
