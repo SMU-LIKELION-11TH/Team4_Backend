@@ -8,7 +8,6 @@ import smu.likelion.Traditional.Market.domain.entity.Store;
 
 @Getter
 @Setter
-@Builder
 public class MenuRequestDto {
     private String menuName;
     private Integer menuPrice;
@@ -17,9 +16,10 @@ public class MenuRequestDto {
     private String imageUrl;
     private Long storeId;
 
-    public MenuRequestDto(){
-        
-    }
+//    public MenuRequestDto(){
+//
+//    }
+
     public Menu toEntity(Store store){
         return Menu.builder()
                 .menuName(this.menuName)

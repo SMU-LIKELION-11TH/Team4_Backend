@@ -35,7 +35,7 @@ public class Market {
     @Column(name = "market_desc")
     private String marketDesc;
 
-    @OneToMany(mappedBy = "market", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "market")
     private List<Category> categoryList = new ArrayList<>();
 
     public Market(MarketRequestDto marketRequestDto){
