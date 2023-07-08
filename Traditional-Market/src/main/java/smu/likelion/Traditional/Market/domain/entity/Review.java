@@ -4,8 +4,11 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
 
 import javax.persistence.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -37,5 +40,17 @@ public class Review extends BaseEntity {
         this.content = content;
         this.user = user;
         this.store = store;
+    }
+
+    public static List<ReviewReturnDto> toDtoList(List<Review> entities) {
+        // try-catch ?
+        return entities.stream().map(
+                (review -> ReviewReturnDto.builder().entity(review).build())
+        ).collect(Collectors.toList());
+    }
+
+    public void update(Integer stars, String content) {
+        this.stars = stars;
+        this.content = content;
     }
 }

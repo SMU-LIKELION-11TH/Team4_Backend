@@ -1,5 +1,6 @@
 package smu.likelion.Traditional.Market.dto.review;
 
+import lombok.Builder;
 import smu.likelion.Traditional.Market.domain.entity.Review;
 
 import java.time.LocalDateTime;
@@ -11,11 +12,12 @@ public class ReviewReturnDto {
     private String reviewer;
     private LocalDateTime createdAt;
 
-    public ReviewReturnDto(Review review) {
-        this.id = review.getId();
-        this.stars = review.getStars();
-        this.content = review.getContent();
-        this.reviewer = review.getUser().getNickname();
-        this.createdAt = review.getCreatedAt();
+    @Builder
+    public ReviewReturnDto(Review entity) {
+        this.id = entity.getId();
+        this.stars = entity.getStars();
+        this.content = entity.getContent();
+        this.reviewer = entity.getUser().getNickname();
+        this.createdAt = entity.getCreatedAt();
     }
 }

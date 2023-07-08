@@ -1,22 +1,23 @@
 package smu.likelion.Traditional.Market.dto.review;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.Review;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.User;
 
+@Getter @Setter
 public class ReviewRequestDto {
     private int stars;
     private String content;
-    private Long storeId;
-    private Long userId;
+    private String email;
 
     @Builder
-    public ReviewRequestDto(int stars, String content, Long storeId, Long userId) {
+    public ReviewRequestDto(int stars, String content, String email) {
         this.stars = stars;
         this.content = content;
-        this.storeId = storeId;
-        this.userId = userId;
+        this.email = email;
     }
 
     public Review toEntity(Store store, User user) {

@@ -14,11 +14,11 @@ public class UserRequestDto {
         this.nickname = nickname;
     }
 
-    public User toEntity(String uploadImg, String storeImg) {
+    public User toEntity(String uploadImg, String saveImg) {
         return User.builder()
                 .nickname(this.nickname)
                 .uploadImg(uploadImg)
-                .storeImg(storeImg)
+                .saveImg(saveImg)
                 .build();
     }
 

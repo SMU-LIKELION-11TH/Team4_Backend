@@ -24,6 +24,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "api_key")
+    private String apiKey;
+
     @Column(nullable = false)
     private String nickname;
 
@@ -36,16 +39,31 @@ public class User extends BaseEntity {
     @Column(name = "upload_img", nullable = false)
     private String uploadImg;
 
-    @Column(name = "store_img", nullable = false)
-    private String storeImg;
+    @Column(name = "save_img", nullable = false)
+    private String saveImg;
 
     @Builder
-    public User(String email, String password, String nickname, Role role, String uploadImg, String storeImg) {
+    public User(String email, String password, String nickname, Role role, String uploadImg, String saveImg) {
         this.email = email;
         this.password = password;
         this.nickname = nickname;
         this.role = role;
         this.uploadImg = uploadImg;
-        this.storeImg = storeImg;
+        this.saveImg = saveImg;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
+    public void update(String nickname) {
+        this.nickname = nickname;
+    }
+    public void addReview(Review review) {
+        this.reviews.add(review);
     }
 }
