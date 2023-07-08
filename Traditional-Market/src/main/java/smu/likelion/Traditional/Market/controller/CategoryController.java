@@ -37,6 +37,7 @@ public class CategoryController {
     @GetMapping("/category")
     public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
         try{
+            //return ResponseEntity.ok(categoryService.findByMarketId(marketId));
             List<Category> categoryList = categoryService.findByMarketId(marketId);
             return ResponseEntity.ok(categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList()));
         } catch (Exception e){

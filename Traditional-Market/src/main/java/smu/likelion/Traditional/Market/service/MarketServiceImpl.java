@@ -3,7 +3,6 @@ package smu.likelion.Traditional.Market.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import smu.likelion.Traditional.Market.domain.entity.Market;
-import smu.likelion.Traditional.Market.domain.entity.UploadFile;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.repository.MarketRepository;
 
@@ -17,9 +16,9 @@ public class MarketServiceImpl implements MarketService{
     private MarketRepository marketRepository;
 
     @Override
-    public void save(MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public void save(MarketRequestDto marketRequestDto){
         try{
-            marketRepository.save(new Market(marketRequestDto, uploadFile));
+            marketRepository.save(new Market(marketRequestDto));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -48,7 +47,17 @@ public class MarketServiceImpl implements MarketService{
     }
 
     @Override
-    public boolean update(Long id, MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public Optional<Market> findByMarketName(String marketName){
+        try {
+            return marketRepository.findByMarketName(marketName);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean update(Long id, MarketRequestDto marketRequestDto){
         try {
             Optional<Market> marketOptional = marketRepository.findById(id);
             if(marketOptional.isPresent()){
@@ -56,8 +65,6 @@ public class MarketServiceImpl implements MarketService{
                 market.setMarketName(marketRequestDto.getMarketName());
                 market.setMarketAddress(marketRequestDto.getMarketAddress());
                 market.setMarketDesc(marketRequestDto.getMarketDesc());
-                market.setUploadFilename(uploadFile.getUploadFilename());
-                market.setStoreFilename(uploadFile.getStoreFilename());
                 marketRepository.save(market);
                 return true;
             }

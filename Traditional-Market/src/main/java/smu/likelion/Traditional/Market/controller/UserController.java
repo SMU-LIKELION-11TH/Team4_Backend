@@ -9,9 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
 import smu.likelion.Traditional.Market.dto.user.*;
 import smu.likelion.Traditional.Market.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class UserController {
         return null;
     }
 
+    @CrossOrigin(origins = "*")
     @PostMapping("/login")
     public ResponseEntity<UserReturnDto> login(@RequestBody UserLogin dto) {
         try {

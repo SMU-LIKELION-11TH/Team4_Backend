@@ -6,3 +6,4 @@ import smu.likelion.Traditional.Market.domain.entity.Store;
 public interface StoreRepository extends JpaRepository<Store, Long> {
 }
 
+

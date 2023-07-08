@@ -14,7 +14,6 @@ import java.util.List;
 @Entity
 @Table(name = "stores")
 public class Store {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +30,6 @@ public class Store {
 
     public void addReview(Review review) {
         this.reviews.add(review);
-    }
 
+    }
 }

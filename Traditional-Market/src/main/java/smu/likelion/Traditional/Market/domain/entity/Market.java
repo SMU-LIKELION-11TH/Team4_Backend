@@ -8,6 +8,7 @@ import lombok.Setter;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
@@ -34,20 +35,12 @@ public class Market {
     @Column(name = "market_desc")
     private String marketDesc;
 
-    @Column(name = "upload_filename")
-    private String uploadFilename;//사용자가 업로드한 파일명
+    @OneToMany(mappedBy = "market", fetch = FetchType.EAGER)
+    private List<Category> categoryList = new ArrayList<>();
 
-    @Column(name = "store_filename")
-    private String storeFilename;//서버 내부에서 관리하는 파일명
-
-    @OneToMany(mappedBy = "market")
-    private List<Category> categoryList;
-
-    public Market(MarketRequestDto marketRequestDto, UploadFile uploadFile){
+    public Market(MarketRequestDto marketRequestDto){
         this.marketName = marketRequestDto.getMarketName();
         this.marketAddress = marketRequestDto.getMarketAddress();
         this.marketDesc = marketRequestDto.getMarketDesc();
-        this.uploadFilename = uploadFile.getUploadFilename();
-        this.storeFilename = uploadFile.getStoreFilename();
     }
 }

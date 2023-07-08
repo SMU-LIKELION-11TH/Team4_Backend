@@ -1,25 +1,15 @@
 package smu.likelion.Traditional.Market.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import smu.likelion.Traditional.Market.jwt.BearerAuthInterceptor;
-import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 @Configuration
-public class WebMvcConfig implements WebMvcConfigurer {
+public class WebMvcConfig extends WebMvcConfigurationSupport {
 
-    private final BearerAuthInterceptor bearerAuthInterceptor;
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public WebMvcConfig(BearerAuthInterceptor bearerAuthInterceptor, JwtTokenProvider jwtTokenProvider){
-        this.bearerAuthInterceptor = bearerAuthInterceptor;
-        this.jwtTokenProvider = jwtTokenProvider;
+    @Override
+    public void addCorsMappings(CorsRegistry registry){
+        registry.addMapping("/**");
     }
 
-    //인터셉터 실행시킬 경로 설정
-    public void addInterceptors(InterceptorRegistry registry){
-        registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/users");
-        registry.addInterceptor(bearerAuthInterceptor).addPathPatterns("/api/markets");
-    }
 }
