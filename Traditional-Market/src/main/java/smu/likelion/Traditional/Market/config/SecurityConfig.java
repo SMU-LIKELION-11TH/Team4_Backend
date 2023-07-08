@@ -32,8 +32,9 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, "/api/markets/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/category/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/stores/**").permitAll()
-                .antMatchers("/api/stores/**").hasRole("CEO")
-                .anyRequest().hasRole("ADMIN")
+                //.antMatchers("/api/stores/**").hasRole("CEO")
+                //.anyRequest().hasRole("ADMIN")
+                .anyRequest().permitAll()
 
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));

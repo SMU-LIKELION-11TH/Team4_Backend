@@ -35,6 +35,7 @@ public class StoreServiceImpl implements StoreService{
             String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
             final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
+            System.out.println(storeRequestDto.getCategoryId());
             Category category1 = category.get();
             Store store = storeRequestDto.toEntity(category1);
             System.out.println(category1);

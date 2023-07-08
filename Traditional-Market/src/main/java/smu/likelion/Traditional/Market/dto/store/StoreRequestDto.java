@@ -1,6 +1,8 @@
 package smu.likelion.Traditional.Market.dto.store;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.domain.entity.Menu;
@@ -30,6 +32,9 @@ public class StoreRequestDto {
         this.menuList = menuList;
         this.storeImageList = storeImageList;
         this.categoryId = categoryId;
+    }
+    public StoreRequestDto(){
+
     }
 
     public Store toEntity(Category category){
