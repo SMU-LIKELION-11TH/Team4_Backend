@@ -40,12 +40,14 @@ public class Store {
     @Column(name = "store_tel")
     private String storeTel;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "store")
+    //@JsonManagedReference
+    //@OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menuList = new ArrayList<>();
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "store")
+    //@JsonManagedReference
+    //@OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreImage> storeImageList = new ArrayList<>();
 
     @JsonBackReference
@@ -53,7 +55,7 @@ public class Store {
     @JoinColumn(name="category_id")
     private Category category;
 
-    @JsonManagedReference
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;

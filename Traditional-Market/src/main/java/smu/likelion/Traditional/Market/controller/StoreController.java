@@ -48,7 +48,13 @@ public class StoreController {
         return ResponseEntity.ok(storeReturnDto);
     }
 
-    @PutMapping("/stores/{storeid}")
+    @GetMapping("/stores/by-category/{categoryId}")
+    public ResponseEntity<List<StoreReturnDto>> getStoreByCategoryId(@PathVariable("categoryId") Long id){
+        List<StoreReturnDto> storeReturnDtoList = storeService.findByCategoryId(id);
+        return ResponseEntity.ok(storeReturnDtoList);
+    }
+
+    @PutMapping(value = "/stores/{storeid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id,
                                                           @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
                                                           @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto) {

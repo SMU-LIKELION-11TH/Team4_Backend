@@ -1,15 +1,16 @@
 package smu.likelion.Traditional.Market.dto.store;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.domain.entity.Menu;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.StoreImage;
+import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
+import smu.likelion.Traditional.Market.dto.storeimage.StoreImageReturnDto;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter @Setter
 public class StoreRequestDto {
@@ -21,8 +22,8 @@ public class StoreRequestDto {
     private String roadAddress;
     private String detailAddress;
     private String storeTel;
-    private List<Menu> menuList;
-    private List<StoreImage> storeImageList;
+    private List<MenuReturnDto> menuList;
+    private List<StoreImageReturnDto> storeImageList;
     private Long categoryId;
     //builder어떻게 쓸지 고민하기.
     public StoreRequestDto(String storeName, String storeDesc, String startTime,String endTime, String roadAddress,String detailAddress, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,Long categoryId) {
@@ -33,8 +34,8 @@ public class StoreRequestDto {
         this.roadAddress = roadAddress;
         this.detailAddress = detailAddress;
         this.storeTel = storeTel;
-        this.menuList = menuList;
-        this.storeImageList = storeImageList;
+        this.menuList = menuList.stream().map(MenuReturnDto::new).collect(Collectors.toList());
+        this.storeImageList = storeImageList.stream().map(StoreImageReturnDto::new).collect(Collectors.toList());
         this.categoryId = categoryId;
     }
     public StoreRequestDto(){
@@ -50,8 +51,8 @@ public class StoreRequestDto {
                 .roadAddress(this.roadAddress)
                 .detailAddress(this.detailAddress)
                 .storeTel(this.storeTel)
-                .menuList(this.menuList)
-                .storeImageList(this.storeImageList)
+                //.menuList(this.menuList)
+                //.storeImageList(this.storeImageList)
                 .category(category)
                 .build();
     }

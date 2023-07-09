@@ -8,16 +8,17 @@ import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.StoreImage;
+import smu.likelion.Traditional.Market.dto.common.FileDto;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
+import smu.likelion.Traditional.Market.util.FileStore;
 
-import java.io.File;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,12 +29,14 @@ public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
     private final StoreImageRepository storeImageRepository;
+    private final FileStore fileStore;
 
     @Override
     public StoreReturnDto save(List<MultipartFile> multipartFiles,StoreRequestDto storeRequestDto) {
         try{
-            String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
-            final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
+            //store 저장하는 로직
+            //String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
+            //final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
             System.out.println(storeRequestDto.getCategoryId());
             Category category1 = category.get();
@@ -42,6 +45,12 @@ public class StoreServiceImpl implements StoreService{
             System.out.println(store);
             storeRepository.save(store);
 
+            //이미지 저장하는 로직
+            saveImages(multipartFiles, store);
+
+            store.setStoreImageList(storeImageRepository.findByStore_Id(store.getId()));
+
+            /*
             int len = multipartFiles.size();
             for(int i = 0; i< len; i++){
                 MultipartFile file = multipartFiles.get(i);
@@ -75,14 +84,11 @@ public class StoreServiceImpl implements StoreService{
                         .store(store1)
                         .build();
                 storeImageRepository.save(storeImage);  //왜 됨..?
-            }
+
+            }*/
 
 //[image1 [asdasdas] image [asdasd]]
-
-
             return new StoreReturnDto(store);
-
-
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -119,12 +125,25 @@ public class StoreServiceImpl implements StoreService{
     }
 
     @Override
+    public List<StoreReturnDto> findByCategoryId(Long id){
+        try {
+            List<Store> storeList = storeRepository.findAllByCategoryId(id);
+            if(storeList != null){
+                return storeList.stream().map(StoreReturnDto::new).collect(Collectors.toList());
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
     public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto,List<MultipartFile> multipartFiles ) {
         try {
             Optional<Store> storeData = storeRepository.findById(id);
             System.out.println(storeData);
-            String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
-            final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
+            //String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
+            //final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             if(storeData.isPresent()){
                 Store store = storeData.get();
 
@@ -139,8 +158,20 @@ public class StoreServiceImpl implements StoreService{
                 store.setDetailAddress(storeRequestDto.getDetailAddress());
                 store.setCategory(category1);
 
-
                 List<StoreImage> storeImageList = storeImageRepository.findByStore_Id(store.getId());
+                Iterator<StoreImage> it = storeImageList.iterator();
+                while(it.hasNext()){
+                    StoreImage storeImage = it.next();
+                    Long imageId = storeImage.getId();
+                    storeImageRepository.deleteById(imageId);
+                    fileStore.deleteFile(storeImage.getStoreImageUrl());
+                }
+                saveImages(multipartFiles, store);
+
+                storeRepository.save(store);
+                store.setStoreImageList(storeImageRepository.findByStore_Id(store.getId()));
+
+                /*
                 for(int i = 0; i < multipartFiles.size(); i++){
                     MultipartFile file = multipartFiles.get(i);
                     int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
@@ -158,11 +189,8 @@ public class StoreServiceImpl implements StoreService{
                     storeImageRepository.save(storeImage);
 
                 }
+                */
 
-
-
-
-                storeRepository.save(store);
                 return new StoreReturnDto(store);
 
             }else {
@@ -178,9 +206,30 @@ public class StoreServiceImpl implements StoreService{
     @Override
     public void delete(Long id) {
         try {
+            List<StoreImage> storeImageList = storeImageRepository.findByStore_Id(id);
+            Iterator<StoreImage> it = storeImageList.iterator();
+            while(it.hasNext()){
+                fileStore.deleteFile(it.next().getStoreImageUrl());
+            }
             storeRepository.deleteById(id);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void saveImages(List<MultipartFile> multipartFiles, Store store){
+        if(multipartFiles != null){
+            List<FileDto> fileDtoList = fileStore.storeFiles(multipartFiles);
+            Iterator<FileDto> it = fileDtoList.iterator();
+            while(it.hasNext()){
+                FileDto fileDto = it.next();
+                StoreImage storeImage = StoreImage.builder()
+                        .storeFilename(fileDto.getUploadFilename())
+                        .storeImageUrl(fileDto.getSaveFilename())
+                        .store(store)
+                        .build();
+                storeImageRepository.save(storeImage);
+            }
         }
     }
 }
