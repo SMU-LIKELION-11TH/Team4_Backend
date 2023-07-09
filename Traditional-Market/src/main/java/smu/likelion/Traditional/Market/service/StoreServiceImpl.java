@@ -133,8 +133,10 @@ public class StoreServiceImpl implements StoreService{
                 store.setStoreName(storeRequestDto.getStoreName());
                 store.setStoreDesc(storeRequestDto.getStoreDesc());
                 store.setStoreTel(storeRequestDto.getStoreTel());
-                store.setStoreTime(storeRequestDto.getStoreTime());
-                store.setStoreAddress(storeRequestDto.getStoreAddress());
+                store.setStartTime(storeRequestDto.getStartTime());
+                store.setEndTime(storeRequestDto.getEndTime());
+                store.setRoadAddress(storeRequestDto.getRoadAddress());
+                store.setDetailAddress(storeRequestDto.getDetailAddress());
                 store.setCategory(category1);
 
 

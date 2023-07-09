@@ -16,18 +16,22 @@ public class StoreRequestDto {
     private Long storeId;
     private String storeName;
     private String storeDesc;
-    private String storeAddress;
-    private String storeTime;
+    private String startTime;
+    private String endTime;
+    private String roadAddress;
+    private String detailAddress;
     private String storeTel;
     private List<Menu> menuList;
     private List<StoreImage> storeImageList;
     private Long categoryId;
     //builder어떻게 쓸지 고민하기.
-    public StoreRequestDto(String storeName, String storeDesc, String storeAddress, String storeTime, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,Long categoryId) {
+    public StoreRequestDto(String storeName, String storeDesc, String startTime,String endTime, String roadAddress,String detailAddress, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,Long categoryId) {
         this.storeName = storeName;
         this.storeDesc = storeDesc;
-        this.storeAddress = storeAddress;
-        this.storeTime = storeTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.roadAddress = roadAddress;
+        this.detailAddress = detailAddress;
         this.storeTel = storeTel;
         this.menuList = menuList;
         this.storeImageList = storeImageList;
@@ -41,8 +45,10 @@ public class StoreRequestDto {
         return Store.builder()
                 .storeName(this.storeName)
                 .storeDesc(this.storeDesc)
-                .storeAddress(this.storeAddress)
-                .storeTime(this.storeTime)
+                .startTime(this.startTime)
+                .endTime(this.endTime)
+                .roadAddress(this.roadAddress)
+                .detailAddress(this.detailAddress)
                 .storeTel(this.storeTel)
                 .menuList(this.menuList)
                 .storeImageList(this.storeImageList)

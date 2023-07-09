@@ -25,11 +25,17 @@ public class Store {
     @Column(name = "store_desc")
     private String storeDesc;
 
-    @Column(name = "store_address", nullable = false)
-    private String storeAddress;
+    @Column(name = "start_time ")
+    private String startTime;
 
-    @Column(name = "store_time")
-    private String storeTime;
+    @Column(name = "end_time ")
+    private String endTime;
+
+    @Column(name = "road_address ")
+    private String roadAddress;
+
+    @Column(name = "detail_address ")
+    private String detailAddress;
 
     @Column(name = "store_tel")
     private String storeTel;
@@ -47,21 +53,34 @@ public class Store {
     @JoinColumn(name="category_id")
     private Category category;
 
+    @JsonManagedReference
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
+
     public void changeCategory(Category category){
         this.category = category;
         category.getStoreList().add(this);
     }
 
+    public void changeUser(User user){
+        this.user = user;
+        user.getStoreList().add(this);
+    }
+
     @Builder
-    public Store(String storeName, String storeDesc, String storeAddress, String storeTime, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList, Category category) {
+    public Store(String storeName, String storeDesc, String startTime, String endTime,String storeTel,String roadAddress, String detailAddress, List<Menu> menuList, List<StoreImage> storeImageList, Category category) {
         this.storeName = storeName;
         this.storeDesc = storeDesc;
-        this.storeAddress = storeAddress;
-        this.storeTime = storeTime;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.roadAddress = roadAddress;
+        this.detailAddress = detailAddress;
         this.storeTel = storeTel;
         this.menuList = menuList;
         this.storeImageList = storeImageList;
         this.category = category;
     }
+
 
 }
