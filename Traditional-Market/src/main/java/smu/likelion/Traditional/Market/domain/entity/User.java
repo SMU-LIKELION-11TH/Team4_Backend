@@ -32,6 +32,9 @@ public class User extends BaseEntity {
     @OneToMany(mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Store> stores = new ArrayList<>();
+
     @Column(name = "upload_filename")
     private String uploadFilename;
 
@@ -52,7 +55,6 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-
     public void update(String nickname, String uploadFilename, String saveFilename) {
         this.nickname = nickname;
         this.uploadFilename = uploadFilename;
@@ -68,5 +70,6 @@ public class User extends BaseEntity {
     public void addReview(Review review) {
         this.reviews.add(review);
     }
+    public void addStore(Store store) { this.stores.add(store); }
 }
 

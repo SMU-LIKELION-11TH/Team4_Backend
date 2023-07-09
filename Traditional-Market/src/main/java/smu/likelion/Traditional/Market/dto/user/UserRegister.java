@@ -2,11 +2,13 @@ package smu.likelion.Traditional.Market.dto.user;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.domain.enums.Role;
 
 @Getter @Setter
+@NoArgsConstructor
 public class UserRegister {
     private String email;
     private String password;

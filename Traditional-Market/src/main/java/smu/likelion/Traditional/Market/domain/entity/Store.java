@@ -20,12 +20,17 @@ public class Store {
 
     private String name;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @OneToMany(mappedBy = "store")
     private List<Review> reviews = new ArrayList<>();
 
     @Builder
-    public Store(String name) {
+    public Store(String name, User user) {
         this.name = name;
+        this.user = user;
     }
 
     public void addReview(Review review) {

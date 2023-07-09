@@ -19,7 +19,7 @@ spring:
         show_sql: 'true'
     show-sql: 'true'
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
 security:
   jwt:
     token:
