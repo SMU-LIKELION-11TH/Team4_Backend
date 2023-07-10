@@ -23,6 +23,8 @@ public class StoreReturnDto {
     private List<Menu> menuList;
     private List<StoreImage> storeImageList;
     private Long categoryId;
+    private Float averageStars;
+    private Integer countReviews;
 
 
     public StoreReturnDto(Store store){
@@ -31,6 +33,8 @@ public class StoreReturnDto {
         this.storeDesc = store.getStoreDesc();
         this.roadAddress = store.getRoadAddress();
         this.detailAddress = store.getDetailAddress();
+        this.averageStars = store.getAverageStars();
+        this.countReviews = store.getCountReviews();
         this.startTime = store.getStartTime();
         this.endTime = store.getEndTime();
         this.storeTel = store.getStoreTel();

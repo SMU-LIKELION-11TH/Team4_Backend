@@ -1,7 +1,6 @@
 package smu.likelion.Traditional.Market.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -40,6 +39,15 @@ public class Store {
     @Column(name = "store_tel")
     private String storeTel;
 
+    @Column(name = "average_stars")
+    private Float averageStars;
+
+    @Column(name = "count_reviews")
+    private Integer countReviews;
+
+    //@Formula("(SELECT avg(review.stars) from Review review JOIN review.store s where s.id =id)")
+    //private Float averageStars;
+
     //@JsonManagedReference
     //@OneToMany(mappedBy = "store")
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -55,20 +63,36 @@ public class Store {
     @JoinColumn(name="category_id")
     private Category category;
 
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 
+    @OneToMany(mappedBy = "store")
+    private List<Review> reviews = new ArrayList<>();
+
     public void changeCategory(Category category){
         this.category = category;
         category.getStoreList().add(this);
+    }
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void updateAvgReview(Float averageStars){
+        this.averageStars = averageStars;
+    }
+
+    public void updateCntReview(Integer countReviews){
+        this.countReviews = countReviews;
     }
 
     public void changeUser(User user){
         this.user = user;
         user.getStoreList().add(this);
     }
+
 
     @Builder
     public Store(String storeName, String storeDesc, String startTime, String endTime,String storeTel,String roadAddress, String detailAddress, List<Menu> menuList, List<StoreImage> storeImageList, Category category) {

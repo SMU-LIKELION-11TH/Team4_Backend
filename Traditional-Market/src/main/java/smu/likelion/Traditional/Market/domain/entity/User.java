@@ -8,6 +8,14 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sun.istack.NotNull;
+import lombok.*;
+import smu.likelion.Traditional.Market.domain.enums.Role;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -25,16 +33,41 @@ public class User {
     private String password;
 
     @Column(nullable = false)
-    private Role role;
+    private String nickname;
+
+
+    @OneToMany(mappedBy = "user")
+    private List<Review> reviews = new ArrayList<>();
+
 
     @JsonManagedReference
     @OneToMany(mappedBy = "user")
     private List<Store> storeList = new ArrayList<>();
 
     @Builder
-    public User(String email, String password, Role role) {
+    public User(String email, String password, String nickname, Role role, String uploadFilename, String saveFilename) {
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.nickname = nickname;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+//    public void update(String nickname, String uploadFilename, String saveFilename) {
+//        this.nickname = nickname;
+//        this.uploadFilename = uploadFilename;
+//        this.saveFilename = saveFilename;
+//    }
+//    public void update(String uploadFilename, String saveFilename) {
+//        this.uploadFilename = uploadFilename;
+//        this.saveFilename = saveFilename;
+//    }
+    public void update(String nickname) {
+        this.nickname = nickname;
+    }
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
 }

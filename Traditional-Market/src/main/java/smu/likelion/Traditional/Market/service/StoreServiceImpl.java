@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.entity.Category;
@@ -14,7 +15,7 @@ import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
-import smu.likelion.Traditional.Market.utils.FileStore;
+import smu.likelion.Traditional.Market.util.FileStore;
 
 import java.util.Iterator;
 import java.util.List;
@@ -98,7 +99,11 @@ public class StoreServiceImpl implements StoreService{
     @Override
     public List<StoreReturnDto> findAll(){
         try{
-            List<Store> storeList = storeRepository.findAll();
+            Sort sort = Sort.by(Sort.Order.desc("averageStars"),
+                                Sort.Order.desc("countReviews"));
+
+
+            List<Store> storeList = storeRepository.findAll(sort);
 
             return storeList.stream().map(StoreReturnDto::new).collect(Collectors.toList());
         }catch (Exception e){
@@ -127,7 +132,10 @@ public class StoreServiceImpl implements StoreService{
     @Override
     public List<StoreReturnDto> findByCategoryId(Long id){
         try {
-            List<Store> storeList = storeRepository.findAllByCategoryId(id);
+            Sort sort = Sort.by(Sort.Order.desc("averageStars"),
+                    Sort.Order.desc("countReviews"));
+
+            List<Store> storeList = storeRepository.findAllByCategoryId(id,sort);
             if(storeList != null){
                 return storeList.stream().map(StoreReturnDto::new).collect(Collectors.toList());
             }

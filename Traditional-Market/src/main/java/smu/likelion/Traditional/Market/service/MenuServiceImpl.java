@@ -10,7 +10,7 @@ import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
 import smu.likelion.Traditional.Market.repository.MenuRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
-import smu.likelion.Traditional.Market.utils.FileStore;
+import smu.likelion.Traditional.Market.util.FileStore;
 
 import java.util.List;
 import java.util.Optional;
