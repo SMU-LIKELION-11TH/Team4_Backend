@@ -1,4 +1,4 @@
-package smu.likelion.Traditional.Market.util;
+package smu.likelion.Traditional.Market.utils;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +17,7 @@ public class FileStore {
     private final String rootPath = System.getProperty("user.dir");
     // 프로젝트 루트 경로에 있는 files 디렉토리
     private final String fileDir = rootPath + "/files/";
+    private final File Folder = new File(fileDir);
 
     public String getFullPath(String filename) { return fileDir + filename; }
 
@@ -35,14 +36,22 @@ public class FileStore {
         // 파일을 저장하는 부분 -> 파일경로 + storeFileName에 저장
 
         try {
-            multipartFile.transferTo(new File(getFullPath(storeFileName)));
+            if (!(Folder.exists())){
+                try{
+                    Folder.mkdir();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+                multipartFile.transferTo(new File(getFullPath(storeFileName)));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         return FileDto.builder()
-                .uploadFilename(originalFileName)
-                .saveFilename(storeFileName)
+                .uploadFilename(storeFileName)
+                .saveFilename(getFullPath(storeFileName))
                 .build();
     }
 
