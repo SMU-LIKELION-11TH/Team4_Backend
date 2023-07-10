@@ -2,22 +2,22 @@ package smu.likelion.Traditional.Market.dto.review;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.Review;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.User;
 
 @Getter @Setter
+@NoArgsConstructor
 public class ReviewRequestDto {
     private int stars;
     private String content;
-    private String email; // spring security
 
     @Builder
-    public ReviewRequestDto(int stars, String content, String email) {
+    public ReviewRequestDto(int stars, String content) {
         this.stars = stars;
         this.content = content;
-        this.email = email;
     }
 
     public Review toEntity(Store store, User user) {

@@ -75,8 +75,6 @@ public class UserServiceImpl implements UserService {
     public UserReturnDto getUser() {
         User user = findUser(AuthUtil.getAuthUser());
 
-
-
         return UserReturnDto.builder()
                 .entity(user)
                 .build();
@@ -113,6 +111,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser() {
         User user = findUser(AuthUtil.getAuthUser());
         reviewRepository.deleteAll(user.getReviews());
@@ -120,6 +119,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void changePassword(UserPassword dto) {
         User user = findUser(AuthUtil.getAuthUser());
 
@@ -133,11 +133,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public boolean existEmail(String email) {
         return userRepository.existsByEmail(email);
     }
 
     @Override
+    @Transactional
     public List<ReviewReturnDto> getMyReviewList(String sort) {
         User user = findUser(AuthUtil.getAuthUser());
 

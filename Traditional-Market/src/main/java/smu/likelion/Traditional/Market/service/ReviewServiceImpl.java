@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import smu.likelion.Traditional.Market.config.auth.AuthUtil;
 import smu.likelion.Traditional.Market.domain.entity.Review;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.User;
@@ -55,6 +56,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public ReviewReturnDto getReview(Long reviewId) {
 
         Review review = findReview(reviewId);
@@ -65,8 +67,9 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public ReviewReturnDto createReview(Long storeId, ReviewRequestDto dto) {
-        User user = findUser(dto.getEmail()); // spring security
+        User user = findUser(AuthUtil.getAuthUser()); // spring security
         Store store = findStore(storeId);
 
         Review review = dto.toEntity(store, user);
@@ -78,6 +81,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public ReviewReturnDto updateReview(Long reviewId, ReviewRequestDto dto) {
 
         Review review = findReview(reviewId);
@@ -89,6 +93,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
+    @Transactional
     public void deleteReview(Long reviewId) {
         // User, Store ?
         reviewRepository.deleteById(reviewId);

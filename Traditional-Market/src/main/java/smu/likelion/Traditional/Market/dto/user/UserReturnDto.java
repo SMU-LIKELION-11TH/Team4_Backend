@@ -15,8 +15,8 @@ public class UserReturnDto {
     private String nickname;
     private Role role;
     private String imageUrl;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @Builder
     public UserReturnDto(User entity) {

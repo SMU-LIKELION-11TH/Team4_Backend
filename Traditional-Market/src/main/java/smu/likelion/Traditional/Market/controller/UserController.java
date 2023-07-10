@@ -4,13 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
 import smu.likelion.Traditional.Market.dto.user.*;
-import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
 import smu.likelion.Traditional.Market.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,10 +23,9 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserReturnDto> register(@RequestBody UserRegister dto) {
+    public ResponseEntity<ReturnDto> register(@RequestBody UserRegister dto) {
         try {
-            UserReturnDto user = userService.createUser(dto);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.createUser(dto)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,10 +45,9 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<UserReturnDto> getUser() {
+    public ResponseEntity<ReturnDto> getUser() {
         try {
-            UserReturnDto user = userService.getUser();
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getUser()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,11 +55,10 @@ public class UserController {
     }
 
     @PutMapping(value = "/user", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<UserReturnDto> updateUser(@RequestPart(value = "data", required = false) UserRequestDto dto,
-                                                    @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+    public ResponseEntity<ReturnDto> updateUser(@RequestPart(value = "data", required = false) UserRequestDto dto,
+                                                @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
         try {
-            UserReturnDto user = userService.updateUser(dto, multipartFile);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.updateUser(dto, multipartFile)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,10 +66,10 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<HttpStatus> deleteUser() {
+    public ResponseEntity<ReturnDto> deleteUser() {
         try {
             userService.deleteUser();
-            ResponseEntity.noContent();
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,10 +77,10 @@ public class UserController {
     }
 
     @PutMapping("/user/password")
-    public ResponseEntity<HttpStatus> changePassword(@RequestBody UserPassword dto) {
+    public ResponseEntity<ReturnDto> changePassword(@RequestBody UserPassword dto) {
         try {
             userService.changePassword(dto);
-            ResponseEntity.noContent();
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,9 +88,9 @@ public class UserController {
     }
 
     @GetMapping("/user/exist-email/{email}")
-    public Boolean existByEmail(@PathVariable String email) {
+    public ResponseEntity<ReturnDto> existByEmail(@PathVariable String email) {
         try {
-            return userService.existEmail(email);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.existEmail(email)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,10 +98,10 @@ public class UserController {
     }
 
     @GetMapping("/user/reviews")
-    public ResponseEntity<List<ReviewReturnDto>> getMyReviewList(@RequestParam(required = false) String sort) {
+    public ResponseEntity<ReturnDto> getMyReviewList(@RequestParam(required = false) String sort) {
         try {
             List<ReviewReturnDto> reviews = userService.getMyReviewList(sort);
-            return ResponseEntity.ok(reviews);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getMyReviewList(sort)));
         } catch (Exception e) {
             e.printStackTrace();
         }

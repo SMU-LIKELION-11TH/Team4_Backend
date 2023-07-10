@@ -16,8 +16,8 @@ public class ReviewReturnDto {
     private String content;
     private String reviewer;
     private String storeName;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @Builder
     public ReviewReturnDto(Review entity) {
