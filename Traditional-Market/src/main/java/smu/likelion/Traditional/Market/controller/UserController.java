@@ -100,7 +100,6 @@ public class UserController {
     @GetMapping("/user/reviews")
     public ResponseEntity<ReturnDto> getMyReviewList(@RequestParam(required = false) String sort) {
         try {
-            List<ReviewReturnDto> reviews = userService.getMyReviewList(sort);
             return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getMyReviewList(sort)));
         } catch (Exception e) {
             e.printStackTrace();
