@@ -14,7 +14,7 @@ import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
-import smu.likelion.Traditional.Market.util.FileStore;
+import smu.likelion.Traditional.Market.utils.FileStore;
 
 import java.util.Iterator;
 import java.util.List;
