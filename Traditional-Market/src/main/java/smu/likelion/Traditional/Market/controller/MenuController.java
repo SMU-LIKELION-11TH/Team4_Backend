@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
-import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
-import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.service.MenuServiceImpl;
 
 import java.util.List;

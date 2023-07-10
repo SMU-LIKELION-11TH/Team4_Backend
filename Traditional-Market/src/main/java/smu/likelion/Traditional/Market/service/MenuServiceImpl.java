@@ -5,16 +5,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.entity.Menu;
 import smu.likelion.Traditional.Market.domain.entity.Store;
+import smu.likelion.Traditional.Market.dto.common.FileDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
 import smu.likelion.Traditional.Market.repository.MenuRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
+import smu.likelion.Traditional.Market.util.FileStore;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -23,33 +22,38 @@ public class MenuServiceImpl implements MenuService{
 
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
+    private final FileStore fileStore;
+
     @Override
     public MenuReturnDto save(MultipartFile file , MenuRequestDto menuRequestDto) {
         try{
             Optional<Store> store = storeRepository.findById(menuRequestDto.getStoreId());
-            Store store1 = store.get();
-            String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
-            final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
-            int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
-            String type = file.getContentType().substring(idx+1);
-            String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
+            if(store.isPresent()){
+                Store store1 = store.get();
 
+                FileDto fileDto = fileStore.storeFile(file);
 
-            //local업로드 성공
-            file.transferTo(new File(UPLOAD_PATH+serverfilename));
+                /*
+                String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
+                final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
+                int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
+                String type = file.getContentType().substring(idx+1);
+                String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
 
-            //String path = File.separator+serverfilename+File.separator+"sample.jpg";
+                //local업로드 성공
+                file.transferTo(new File(UPLOAD_PATH+serverfilename));
 
+                //String path = File.separator+serverfilename+File.separator+"sample.jpg";
+                 */
 
-            //DB사진 정보 저장
-            menuRequestDto.setImageName(serverfilename);
-            menuRequestDto.setImageUrl(UPLOAD_PATH);
-            Menu menu = menuRequestDto.toEntity(store1);
-            menuRepository.save(menu);
+                //DB사진 정보 저장
+                menuRequestDto.setImageName(fileDto.getUploadFilename());
+                menuRequestDto.setImageUrl(fileDto.getSaveFilename());
+                Menu menu = menuRequestDto.toEntity(store1);
+                menuRepository.save(menu);
 
-            return new MenuReturnDto(menu);
-
-
+                return new MenuReturnDto(menu);
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -91,14 +95,21 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public MenuReturnDto update(Long id, MenuRequestDto menuRequestDto, MultipartFile file) {
         Optional<Menu> menuData = menuRepository.findById(id);
+
+        /*
         String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
         final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
         int idx = file.getContentType().indexOf("/"); //getcontentType : image/png 이런식이기 때문에 /기준으로 그 뒤를 substring
         String type = file.getContentType().substring(idx+1);
         String serverfilename = UUID.randomUUID().toString()+"."+type; //서버(로컬)에 저장될 파일 이름
 
+         */
+
         if(menuData.isPresent()){
             Menu menu = menuData.get();
+
+            fileStore.deleteFile(menu.getImageUrl());
+            FileDto fileDto = fileStore.storeFile(file);
 
             Optional<Store> store = storeRepository.findById(menu.getStore().getId());
             Store store1 = store.get();
@@ -106,15 +117,17 @@ public class MenuServiceImpl implements MenuService{
             menu.setMenuName(menuRequestDto.getMenuName());
             menu.setMenuDesc(menuRequestDto.getMenuDesc());
             menu.setMenuPrice(menuRequestDto.getMenuPrice());
-            menu.setImageName(serverfilename);
-            menu.setImageUrl(UPLOAD_PATH+serverfilename);
+            menu.setImageName(fileDto.getUploadFilename());
+            menu.setImageUrl(fileDto.getSaveFilename());
             menu.setStore(store1);
 
+            /*
             try {
                 file.transferTo(new File(UPLOAD_PATH+serverfilename));
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+             */
 
             menuRepository.save(menu);
             return new MenuReturnDto(menu);
@@ -129,7 +142,12 @@ public class MenuServiceImpl implements MenuService{
     @Override
     public void delete(Long id) {
         try {
-            menuRepository.deleteById(id);
+            Optional<Menu> menuOptional = menuRepository.findById(id);
+            if(menuOptional.isPresent()){
+                Menu menu = menuOptional.get();
+                fileStore.deleteFile(menu.getImageUrl());
+                menuRepository.deleteById(id);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

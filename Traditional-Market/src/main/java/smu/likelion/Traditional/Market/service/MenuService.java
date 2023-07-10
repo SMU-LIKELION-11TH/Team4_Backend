@@ -3,8 +3,6 @@ package smu.likelion.Traditional.Market.service;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
-import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
-import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 
 import java.util.List;
 

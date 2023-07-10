@@ -22,8 +22,11 @@ public class FileStore {
 
     public FileDto storeFile(MultipartFile multipartFile)  {
 
-        if(multipartFile.isEmpty()) {
-            return null;
+        if(multipartFile == null || multipartFile.isEmpty()){
+            return FileDto.builder()
+                    .uploadFilename(null)
+                    .saveFilename(null)
+                    .build();
         }
 
         String originalFileName = multipartFile.getOriginalFilename();
