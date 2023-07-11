@@ -4,17 +4,23 @@ package smu.likelion.Traditional.Market.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.config.auth.AuthUtil;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.StoreImage;
+import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.dto.common.FileDto;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
+import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
 import smu.likelion.Traditional.Market.repository.CategoryRepository;
 import smu.likelion.Traditional.Market.repository.StoreImageRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
+import smu.likelion.Traditional.Market.repository.UserRepository;
+import smu.likelion.Traditional.Market.util.ExceptionUtil;
 import smu.likelion.Traditional.Market.util.FileStore;
 
 import java.util.Iterator;
@@ -30,20 +36,17 @@ public class StoreServiceImpl implements StoreService{
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
     private final StoreImageRepository storeImageRepository;
+    private final UserRepository userRepository;
     private final FileStore fileStore;
 
     @Override
     public StoreReturnDto save(List<MultipartFile> multipartFiles,StoreRequestDto storeRequestDto) {
         try{
             //store 저장하는 로직
-            //String fileSeparator = File.separator; //OS에 따라 "/"값이 다를 수 있기에 설정
-            //final String UPLOAD_PATH = "D:"+fileSeparator+"likelionhackathon"+fileSeparator+"Traditional-Market"+fileSeparator+"src"+fileSeparator+"main"+fileSeparator+"resources"+fileSeparator+"images"+fileSeparator;
             Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
-            System.out.println(storeRequestDto.getCategoryId());
             Category category1 = category.get();
             Store store = storeRequestDto.toEntity(category1);
-            System.out.println(category1);
-            System.out.println(store);
+            store.setUser(findUser(AuthUtil.getAuthUser()));
             storeRepository.save(store);
 
             //이미지 저장하는 로직
@@ -145,6 +148,7 @@ public class StoreServiceImpl implements StoreService{
         return null;
     }
 
+    //@PreAuthorize("hasRole('CEO') and (findUser(AuthUtil.getAuthUser()) == storeRepositoy.findById(#storeRequestDto.getId()).get().getUser())")
     @Override
     public StoreReturnDto update(Long id, StoreRequestDto storeRequestDto,List<MultipartFile> multipartFiles ) {
         try {
@@ -239,5 +243,10 @@ public class StoreServiceImpl implements StoreService{
                 storeImageRepository.save(storeImage);
             }
         }
+    }
+
+    private User findUser(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> ExceptionUtil.id(email, User.class.getName()));
     }
 }

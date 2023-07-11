@@ -15,4 +15,6 @@ public interface ReviewService {
     public ReviewReturnDto updateReview(Long reviewId, ReviewRequestDto dto);
 
     public void deleteReview(Long reviewId);
+
+    public Long getReviewerId(Long reviewId);
 }

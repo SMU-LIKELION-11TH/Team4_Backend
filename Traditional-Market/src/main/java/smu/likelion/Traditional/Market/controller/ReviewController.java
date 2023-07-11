@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.enums.Code;
 import smu.likelion.Traditional.Market.dto.common.ReturnDto;
@@ -20,7 +21,6 @@ public class ReviewController {
 
 
     @GetMapping("/{storeId}/reviews")
-
     public ResponseEntity<ReturnDto> getStoreReviewList(@PathVariable Long storeId,
                                                         @RequestParam(required = false) String sort) {
         try {
@@ -32,7 +32,6 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{reviewId}")
-
     public ResponseEntity<ReturnDto> getReview(@PathVariable Long reviewId) {
         try {
             return ResponseEntity.ok(ReturnDto.of(Code.OK, reviewService.getReview(reviewId)));
@@ -42,8 +41,8 @@ public class ReviewController {
         return null;
     }
 
+    @PreAuthorize("hasRole('USER')")
     @PostMapping("{storeId}/review")
-
     public ResponseEntity<ReturnDto> createReview(@PathVariable Long storeId,
                                                   @RequestBody ReviewRequestDto dto) {
         try {
@@ -54,6 +53,7 @@ public class ReviewController {
         return null;
     }
 
+    @PreAuthorize("hasRole('USER') and @permissionChecker.checkPermission(@reviewServiceImpl.getReviewerId(#reviewId))")
     @PutMapping("{storeId}/reviews/{reviewId}")
     public ResponseEntity<ReturnDto> updateReview(@PathVariable Long storeId,
                                                   @PathVariable Long reviewId,
@@ -66,8 +66,8 @@ public class ReviewController {
         return null;
     }
 
+    @PreAuthorize("hasRole('USER') and @permissionChecker.checkPermission(@reviewServiceImpl.getReviewerId(#reviewId))")
     @DeleteMapping("{storeId}/reviews/{reviewId}")
-
     public ResponseEntity<ReturnDto> deleteReview(@PathVariable Long storeId,
                                                   @PathVariable Long reviewId) {
         try {

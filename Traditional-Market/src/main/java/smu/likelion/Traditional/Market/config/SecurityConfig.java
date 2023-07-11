@@ -8,15 +8,8 @@ import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import smu.likelion.Traditional.Market.config.auth.AuthUserDetailsService;
 import smu.likelion.Traditional.Market.jwt.JwtAccessDeniedHandler;
@@ -70,10 +63,13 @@ public class SecurityConfig {
 //                .antMatchers(HttpMethod.POST, "/api/stores", "/api/stores/**/menus").hasRole("CEO")
 //                .antMatchers(HttpMethod.PUT, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
 //                .antMatchers(HttpMethod.DELETE, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
+                //.anyRequest().authenticated()
                 .anyRequest().authenticated()
-                .and()
+
                 // Session 사용 X
+                .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
 

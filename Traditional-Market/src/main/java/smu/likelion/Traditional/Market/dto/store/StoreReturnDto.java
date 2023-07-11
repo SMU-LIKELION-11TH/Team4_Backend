@@ -25,6 +25,7 @@ public class StoreReturnDto {
     private Long categoryId;
     private Float averageStars;
     private Integer countReviews;
+    private Long userId;
 
 
     public StoreReturnDto(Store store){
@@ -41,6 +42,6 @@ public class StoreReturnDto {
         this.menuList = store.getMenuList();
         this.storeImageList = store.getStoreImageList();
         this.categoryId = store.getCategory().getId();
-
+        this.userId = store.getUser().getId();
     }
 }

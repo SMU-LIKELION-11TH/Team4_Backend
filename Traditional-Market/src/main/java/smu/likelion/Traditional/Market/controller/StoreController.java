@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
@@ -20,13 +21,13 @@ public class StoreController {
     @Autowired
     StoreServiceImpl storeService;
 
+    @PreAuthorize("hasRole('CEO')")
     @PostMapping(value = "/stores", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StoreReturnDto> createStore(@RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
                                                       @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto){
         StoreReturnDto storeReturnDto = storeService.save(multipartFiles,storeRequestDto);
         return ResponseEntity.ok(storeReturnDto);
     }
-
 
     @GetMapping("/stores")
     public ResponseEntity<List<StoreReturnDto>> getAllStore(){
@@ -54,6 +55,7 @@ public class StoreController {
         return ResponseEntity.ok(storeReturnDtoList);
     }
 
+    @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
     @PutMapping(value = "/stores/{storeid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id,
                                                           @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
@@ -62,6 +64,7 @@ public class StoreController {
         return ResponseEntity.ok(storeReturnDto);
     }
 
+    @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
     @DeleteMapping("/stores")
     public ResponseEntity<HttpStatus> deleteStore(@RequestParam("storeid") Long id){
         try{

@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
@@ -19,7 +20,7 @@ public class CategoryController {
     @Autowired
     CategoryServiceImpl categoryService;
 
-    //사용자 인증 필요
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/category")
     public ResponseEntity<?> createCategory(@RequestParam("marketId") Long marketId, @RequestBody CategoryRequestDto categoryRequestDto){
         try{
@@ -59,7 +60,7 @@ public class CategoryController {
 //        return null;
 //    }
 
-    //사용자 인증 필요
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/category/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequestDto categoryRequestDto){
         try {
@@ -73,7 +74,7 @@ public class CategoryController {
         return null;
     }
 
-    //사용자 인증 필요
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/category/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id){
         try {

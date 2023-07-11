@@ -10,14 +10,13 @@ import smu.likelion.Traditional.Market.domain.entity.Store;
 import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.dto.review.ReviewRequestDto;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
-import smu.likelion.Traditional.Market.dto.user.UserReturnDto;
 import smu.likelion.Traditional.Market.repository.ReviewRepository;
 import smu.likelion.Traditional.Market.repository.StoreRepository;
 import smu.likelion.Traditional.Market.repository.UserRepository;
 import smu.likelion.Traditional.Market.util.ExceptionUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -105,5 +104,14 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(Long reviewId) {
         // User, Store ?
         reviewRepository.deleteById(reviewId);
+    }
+
+    @Override
+    public Long getReviewerId(Long reviewId){
+        Optional<Review> reviewOptional = reviewRepository.findById(reviewId);
+        if(reviewOptional.isPresent()){
+            return reviewOptional.get().getUser().getId();
+        }
+        return null;
     }
 }

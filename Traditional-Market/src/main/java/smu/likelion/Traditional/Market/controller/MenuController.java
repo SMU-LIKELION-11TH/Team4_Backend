@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
@@ -19,10 +20,12 @@ public class MenuController {
     @Autowired
     MenuServiceImpl menuService;
 
+    @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#storeId).getUserId()))")
     @PostMapping("/store/{storeid}/menus")
     public ResponseEntity<MenuReturnDto> createMenu(
             @RequestPart(value = "file",required = false)MultipartFile multipartFile,
-            @RequestPart(value = "menuRequestDto")MenuRequestDto menuRequestDto){
+            @RequestPart(value = "menuRequestDto")MenuRequestDto menuRequestDto,
+            @PathVariable(value = "storeid") Long storeId){
         MenuReturnDto menuReturnDto = menuService.save(multipartFile,menuRequestDto);
         return ResponseEntity.ok(menuReturnDto);
     }
@@ -43,6 +46,7 @@ public class MenuController {
         return ResponseEntity.ok(menuReturnDto);
     }
 
+    @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
     @PutMapping("/store/{storeid}/menus/{menuid}")
     public ResponseEntity<MenuReturnDto> updateMenuById(@PathVariable("storeid") Long id, @PathVariable("menuid") Long menuid,
                                                         @RequestPart("menuRequestDto") MenuRequestDto menuRequestDto,
@@ -51,8 +55,9 @@ public class MenuController {
         return ResponseEntity.ok(MenuReturnDto);
     }
 
+    @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#storeId).getUserId()))")
     @DeleteMapping("/store/{storeid}/menus")
-    public ResponseEntity<HttpStatus> deleteMenu(@RequestParam("menuid") Long id){
+    public ResponseEntity<HttpStatus> deleteMenu(@RequestParam("menuid") Long id, @PathVariable("storeid") Long storeId){
         try{
             menuService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
