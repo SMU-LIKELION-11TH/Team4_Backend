@@ -9,15 +9,27 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import smu.likelion.Traditional.Market.config.auth.AuthUserDetailsService;
 import smu.likelion.Traditional.Market.jwt.JwtAccessDeniedHandler;
 import smu.likelion.Traditional.Market.jwt.JwtAuthenticationEntryPoint;
 import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
+import smu.likelion.Traditional.Market.repository.UserRepository;
 
 @Configuration
+@EnableWebSecurity // Spring Security 활성화
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final UserRepository userRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
@@ -27,6 +39,12 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+
+    /**
+     * permitAll : 인증, 권한 X 가능
+     * authenticated : 인증 해야 됨
+     * antMatchers("경로", "경로", ... ) 가능
+     * */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
@@ -46,20 +64,25 @@ public class SecurityConfig {
 
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/api/login").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/markets/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/category/**").permitAll()
-//                .antMatchers(HttpMethod.GET, "/api/stores/**").permitAll()
-//                .antMatchers("/api/stores/**").hasRole("CEO")
-//                .anyRequest().hasRole("ADMIN")
-                .anyRequest().permitAll()
-
+                .antMatchers("/api/login").permitAll()
+                .antMatchers("/api/register").permitAll()
+                .anyRequest().authenticated()
+                .antMatchers(HttpMethod.POST,"/api/stores/**/review").hasRole("USER")
+                .antMatchers(HttpMethod.PUT,"/api/stores/**/reviews/**").hasRole("USER")
+                .antMatchers(HttpMethod.DELETE,"/api/stores/**/reviews/**").hasRole("USER")
+                .antMatchers(HttpMethod.POST, "/api/stores", "/api/stores/**/menus").hasRole("CEO")
+                .antMatchers(HttpMethod.PUT, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
+                .antMatchers(HttpMethod.DELETE, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
+                .antMatchers("/api/**").hasRole("ADMIN")
+                .and()
+                // Session 사용 X
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .apply(new JwtSecurityConfig(jwtTokenProvider));
 
+
         return http.build();
     }
-
     @Bean
     public FilterRegistrationBean<OpenEntityManagerInViewFilter> openEntityManagerInViewFilter() {
         FilterRegistrationBean<OpenEntityManagerInViewFilter> filterFilterRegistrationBean = new FilterRegistrationBean<>();
@@ -67,4 +90,11 @@ public class SecurityConfig {
         filterFilterRegistrationBean.setOrder(Integer.MIN_VALUE); // 예시를 위해 최우선 순위로 Filter 등록
         return filterFilterRegistrationBean;
     }
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+    @Bean
+    public UserDetailsService userDetailsService() { return new AuthUserDetailsService(userRepository); }
+
 }

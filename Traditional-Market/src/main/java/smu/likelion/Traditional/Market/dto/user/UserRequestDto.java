@@ -1,16 +1,23 @@
 package smu.likelion.Traditional.Market.dto.user;
 
-import lombok.Getter;
-import smu.likelion.Traditional.Market.domain.enums.Role;
+import lombok.*;
+import smu.likelion.Traditional.Market.domain.entity.User;
 
-@Getter
+@Getter @Setter
+@NoArgsConstructor
 public class UserRequestDto {
+    private String nickname;
 
-    private String id;//프론트에선 일단 못 보내줌
+    @Builder
+    public UserRequestDto(String nickname) {
+        this.nickname = nickname;
+    }
 
-    private String email;
-
-    private String password;
-
-    private Role role;
+    public User toEntity(String uploadFilename, String saveFilename) {
+        return User.builder()
+                .nickname(this.nickname)
+                .uploadFilename(uploadFilename)
+                .saveFilename(saveFilename)
+                .build();
+    }
 }

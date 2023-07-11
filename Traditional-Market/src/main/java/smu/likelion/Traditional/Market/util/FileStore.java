@@ -19,6 +19,7 @@ public class FileStore {
     private final String fileDir = rootPath + "/files/";
     private final File Folder = new File(fileDir);
 
+
     public String getFullPath(String filename) { return fileDir + filename; }
 
     public FileDto storeFile(MultipartFile multipartFile)  {
@@ -55,7 +56,8 @@ public class FileStore {
                 .build();
     }
 
-    public List<FileDto> storeFiles(List<MultipartFile> multipartFiles) {
+
+    public List<FileDto> storeFiles(MultipartFile[] multipartFiles) {
         List<FileDto> storeFileResult = new ArrayList<>();
 
         // multipartFiles -> null 처리

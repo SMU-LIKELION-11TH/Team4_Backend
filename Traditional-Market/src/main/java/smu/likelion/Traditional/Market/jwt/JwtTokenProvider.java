@@ -6,12 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import smu.likelion.Traditional.Market.domain.enums.Role;
-import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
+import smu.likelion.Traditional.Market.config.auth.AuthUser;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -23,7 +19,7 @@ public class JwtTokenProvider {
     private String secretKey;
     private Long validityInMilliseconds;
 
-    private static final String AUTHORITIES_KEY = "Auth";
+    private static final String AUTHORITIES_KEY = "role";
 
     public JwtTokenProvider(@Value("${security.jwt.token.secret-key}") String secretKey, @Value("${security.jwt.token.expire-length}") Long validityInMilliseconds){
         this.secretKey = secretKey;
@@ -31,31 +27,28 @@ public class JwtTokenProvider {
     }
 
     //User를 Map 형태로 바꿔줌(토큰으로 바꾸려면 Map 형태여야 함)
-    public Map<String, Object> createPayload(UserRequestDto user){
+    public Map<String, Object> createPayload(AuthUser user){
         Map<String, Object> payloads = new HashMap<>();
-        payloads.put("id", user.getId());
-        payloads.put("email", user.getEmail());
 
-        Role role = user.getRole();
-        if(role == Role.ADMIN) {
-            payloads.put("Auth", "ROLE_ADMIN");
-        } else if(role == Role.CEO){
-            payloads.put("Auth", "ROLE_CEO");
-        } else {
-            payloads.put("Auth", "ROLE_USER");
-        }
+        String authority = user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining());
+
+        payloads.put("email", user.getUsername());
+        payloads.put(AUTHORITIES_KEY, authority);
 
         return payloads;
     }
 
-    public String createToken(UserRequestDto user){
+    // Authentication 객체의 권한 정보를 이용해서 토큰을 생성
+    public String createToken(Authentication authentication){
+
+        AuthUser user = (AuthUser) authentication.getPrincipal();
         Map<String, Object> payloads = createPayload(user);
 
         Date now = new Date();
-
         Date validity = new Date(now.getTime() + validityInMilliseconds);
 
         return Jwts.builder()
+                .setSubject(authentication.getName())
                 .setClaims(payloads)
                 .setIssuedAt(now)
                 .setExpiration(validity)
@@ -65,18 +58,15 @@ public class JwtTokenProvider {
 
     //토큰 해석해서 Map 형태로 내용 추출
     public Map<String, Object> getSubject(String token){
-        Claims claims = parseClaims(token);
-        return claims;
+        return parseClaims(token);
     }
 
-    //유효성 검사
+    // 토큰 유효성 검사
     public boolean validateToken(String token){
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            if(claims.getBody().getExpiration().before(new Date())){
-                return false;
-            }
-            return true;
+            // Expiration Time > Current Time
+            return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e){
             return false;
         }
@@ -86,23 +76,17 @@ public class JwtTokenProvider {
 
         Claims claims = parseClaims(token);
 
-        System.out.println(claims);
-
         if(claims.get(AUTHORITIES_KEY) == null){
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
 
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        AuthUser principal = AuthUser.builder()
+                .username(claims.get("email").toString())
+                .password("")
+                .role(claims.get(AUTHORITIES_KEY).toString())
+                .build();
 
-        System.out.println(authorities);
-        System.out.println(claims.get("email"));
-
-        UserDetails principal = new User((String) claims.get("email"), " ", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, " ", authorities);
+        return new UsernamePasswordAuthenticationToken(principal, "", principal.getAuthorities());
     }
 
     private Claims parseClaims(String token){

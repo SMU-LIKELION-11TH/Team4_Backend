@@ -1,41 +1,108 @@
 package smu.likelion.Traditional.Market.controller;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import smu.likelion.Traditional.Market.dto.user.UserRequestDto;
-import smu.likelion.Traditional.Market.dto.user.UserReturnDto;
-import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
+import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
+import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
+import smu.likelion.Traditional.Market.dto.user.*;
+import smu.likelion.Traditional.Market.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/api")
+@RequiredArgsConstructor
 public class UserController {
+    private final UserService userService;
 
-    private final JwtTokenProvider jwtTokenProvider;
-
-    public UserController(JwtTokenProvider jwtTokenProvider){
-        this.jwtTokenProvider = jwtTokenProvider;
+    @PostMapping("/register")
+    public ResponseEntity<ReturnDto> register(@RequestBody UserRegister dto) {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.createUser(dto)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login")
-    public String login(@RequestBody UserRequestDto userRequestDto){
-        //db에서 id 찾아서 userRequestDto에 넣어주기
-        return jwtTokenProvider.createToken(userRequestDto);
+    public ResponseEntity<ReturnDto> login(@RequestBody UserLogin dto) {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.login(dto)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    @GetMapping("/users")
-    public ResponseEntity<UserReturnDto> getInfo(HttpServletRequest request){
-        Map<String, Object> claims = (Map<String, Object>) request.getAttribute("claims");
+    @GetMapping("/user")
+    public ResponseEntity<ReturnDto> getUser() {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getUser()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        UserReturnDto userReturnDto = new UserReturnDto();
-        userReturnDto.setEmail((String) claims.get("email"));
-        userReturnDto.setRole((String) claims.get("role"));
+    @PutMapping(value = "/user", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<ReturnDto> updateUser(@RequestPart(value = "data", required = false) UserRequestDto dto,
+                                                @RequestPart(value = "file", required = false) MultipartFile multipartFile) {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.updateUser(dto, multipartFile)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        return ResponseEntity.ok().body(userReturnDto);
+    @DeleteMapping("/user")
+    public ResponseEntity<ReturnDto> deleteUser() {
+        try {
+            userService.deleteUser();
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PutMapping("/user/password")
+    public ResponseEntity<ReturnDto> changePassword(@RequestBody UserPassword dto) {
+        try {
+            userService.changePassword(dto);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/user/exist-email/{email}")
+    public ResponseEntity<ReturnDto> existByEmail(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.existEmail(email)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @GetMapping("/user/reviews")
+    public ResponseEntity<ReturnDto> getMyReviewList(@RequestParam(required = false) String sort) {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getMyReviewList(sort)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

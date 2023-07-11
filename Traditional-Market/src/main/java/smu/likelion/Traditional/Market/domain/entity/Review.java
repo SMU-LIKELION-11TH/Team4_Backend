@@ -5,17 +5,18 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
-import smu.likelion.Traditional.Market.repository.ReviewRepository;
-import smu.likelion.Traditional.Market.repository.StoreRepository;
+
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Table(name = "reviews")
-public class Review {
+public class Review extends BaseEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -53,7 +54,4 @@ public class Review {
         this.stars = stars;
         this.content = content;
     }
-
-
-
 }

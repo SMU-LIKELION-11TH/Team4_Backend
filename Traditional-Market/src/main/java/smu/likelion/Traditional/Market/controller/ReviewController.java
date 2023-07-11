@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.review.ReviewRequestDto;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
 import smu.likelion.Traditional.Market.service.ReviewService;
@@ -18,11 +20,11 @@ public class ReviewController {
 
 
     @GetMapping("/{storeId}/reviews")
-    public ResponseEntity<List<ReviewReturnDto>> getStoreReviewList(@PathVariable Long storeId,
-                                                                    @RequestParam(required = false) String sort) {
+
+    public ResponseEntity<ReturnDto> getStoreReviewList(@PathVariable Long storeId,
+                                                        @RequestParam(required = false) String sort) {
         try {
-            List<ReviewReturnDto> reviews = reviewService.getStoreReviewList(storeId, sort);
-            return ResponseEntity.ok(reviews);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, reviewService.getStoreReviewList(storeId, sort)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -30,10 +32,10 @@ public class ReviewController {
     }
 
     @GetMapping("/reviews/{reviewId}")
-    public ResponseEntity<ReviewReturnDto> getReview(@PathVariable Long reviewId) {
+
+    public ResponseEntity<ReturnDto> getReview(@PathVariable Long reviewId) {
         try {
-            ReviewReturnDto review = reviewService.getReview(reviewId);
-            return ResponseEntity.ok(review);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, reviewService.getReview(reviewId)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,11 +43,11 @@ public class ReviewController {
     }
 
     @PostMapping("{storeId}/review")
-    public ResponseEntity<ReviewReturnDto> createReview(@PathVariable Long storeId,
-                                                        @RequestBody ReviewRequestDto dto) {
+
+    public ResponseEntity<ReturnDto> createReview(@PathVariable Long storeId,
+                                                  @RequestBody ReviewRequestDto dto) {
         try {
-            ReviewReturnDto review = reviewService.createReview(storeId, dto);
-            return ResponseEntity.ok(review);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, reviewService.createReview(storeId, dto)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,13 +55,11 @@ public class ReviewController {
     }
 
     @PutMapping("{storeId}/reviews/{reviewId}")
-    public ResponseEntity<ReviewReturnDto> updateReview(@PathVariable Long storeId,
-                                                        @PathVariable Long reviewId,
-                                                        @RequestBody ReviewRequestDto dto) {
+    public ResponseEntity<ReturnDto> updateReview(@PathVariable Long storeId,
+                                                  @PathVariable Long reviewId,
+                                                  @RequestBody ReviewRequestDto dto) {
         try {
-            // verify 권한 확인
-            ReviewReturnDto review = reviewService.updateReview(reviewId, dto);
-            return ResponseEntity.ok(review);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, reviewService.updateReview(reviewId, dto)));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,12 +67,12 @@ public class ReviewController {
     }
 
     @DeleteMapping("{storeId}/reviews/{reviewId}")
-    public ResponseEntity<HttpStatus> deleteReview(@PathVariable Long storeId,
-                                                   @PathVariable Long reviewId) {
+
+    public ResponseEntity<ReturnDto> deleteReview(@PathVariable Long storeId,
+                                                  @PathVariable Long reviewId) {
         try {
-            // verify 권한 확인
             reviewService.deleteReview(reviewId);
-            ResponseEntity.noContent();
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         } catch (Exception e) {
             e.printStackTrace();
         }

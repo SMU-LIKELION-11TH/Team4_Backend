@@ -16,8 +16,8 @@ public class ReviewReturnDto {
     private String content;
     private String reviewer;
     private String storeName;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String createdAt;
+    private String updatedAt;
 
     @Builder
     public ReviewReturnDto(Review entity) {
@@ -26,5 +26,7 @@ public class ReviewReturnDto {
         this.content = entity.getContent();
         this.reviewer = entity.getUser().getNickname();
         this.storeName = entity.getStore().getStoreName();
+        this.createdAt = entity.getCreatedAt();
+        this.updatedAt = entity.getUpdatedAt();
     }
 }

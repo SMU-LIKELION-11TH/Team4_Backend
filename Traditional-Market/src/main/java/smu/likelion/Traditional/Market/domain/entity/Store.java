@@ -1,17 +1,19 @@
 package smu.likelion.Traditional.Market.domain.entity;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 import javax.persistence.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@NoArgsConstructor
 @Entity
-@Setter //언젠간 이 놈을 반드시 없앤다.
 @Table(name = "stores")
 public class Store {
     @Id
@@ -45,16 +47,9 @@ public class Store {
     @Column(name = "count_reviews")
     private Integer countReviews;
 
-    //@Formula("(SELECT avg(review.stars) from Review review JOIN review.store s where s.id =id)")
-    //private Float averageStars;
-
-    //@JsonManagedReference
-    //@OneToMany(mappedBy = "store")
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Menu> menuList = new ArrayList<>();
 
-    //@JsonManagedReference
-    //@OneToMany(mappedBy = "store")
     @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<StoreImage> storeImageList = new ArrayList<>();
 
@@ -62,7 +57,6 @@ public class Store {
     @ManyToOne
     @JoinColumn(name="category_id")
     private Category category;
-
 
     @JsonBackReference
     @ManyToOne
@@ -90,9 +84,8 @@ public class Store {
 
     public void changeUser(User user){
         this.user = user;
-        user.getStoreList().add(this);
+        user.getStores().add(this);
     }
-
 
     @Builder
     public Store(String storeName, String storeDesc, String startTime, String endTime,String storeTel,String roadAddress, String detailAddress, List<Menu> menuList, List<StoreImage> storeImageList, Category category) {
@@ -107,6 +100,4 @@ public class Store {
         this.storeImageList = storeImageList;
         this.category = category;
     }
-
-
 }
