@@ -34,11 +34,6 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
     /**
      * permitAll : 인증, 권한 X 가능
@@ -66,14 +61,16 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/register").permitAll()
+                .antMatchers("/h2-console/**").permitAll()
+//                // review 생성, 수정, 삭제 -> only ROLE_USER
+//                .antMatchers(HttpMethod.POST,"/api/stores/**/review").hasAnyRole("USER", "ADMIN")
+//                .antMatchers(HttpMethod.PUT,"/api/stores/**/reviews/**").hasRole("USER")
+//                .antMatchers(HttpMethod.DELETE,"/api/stores/**/reviews/**").hasRole("USER")
+//                // store & menu 생성, 수정, 삭제 -> only ROLE_CEO
+//                .antMatchers(HttpMethod.POST, "/api/stores", "/api/stores/**/menus").hasRole("CEO")
+//                .antMatchers(HttpMethod.PUT, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
+//                .antMatchers(HttpMethod.DELETE, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
                 .anyRequest().authenticated()
-                .antMatchers(HttpMethod.POST,"/api/stores/**/review").hasRole("USER")
-                .antMatchers(HttpMethod.PUT,"/api/stores/**/reviews/**").hasRole("USER")
-                .antMatchers(HttpMethod.DELETE,"/api/stores/**/reviews/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/api/stores", "/api/stores/**/menus").hasRole("CEO")
-                .antMatchers(HttpMethod.PUT, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
-                .antMatchers(HttpMethod.DELETE, "/api/stores/**", "/api/stores/**/menu").hasRole("CEO")
-                .antMatchers("/api/**").hasRole("ADMIN")
                 .and()
                 // Session 사용 X
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

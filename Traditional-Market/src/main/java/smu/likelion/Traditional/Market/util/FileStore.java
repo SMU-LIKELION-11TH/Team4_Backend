@@ -57,7 +57,7 @@ public class FileStore {
     }
 
 
-    public List<FileDto> storeFiles(MultipartFile[] multipartFiles) {
+    public List<FileDto> storeFiles(List<MultipartFile> multipartFiles) {
         List<FileDto> storeFileResult = new ArrayList<>();
 
         // multipartFiles -> null 처리
