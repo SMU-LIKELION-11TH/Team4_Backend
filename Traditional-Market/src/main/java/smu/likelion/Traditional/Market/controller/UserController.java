@@ -34,10 +34,9 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLogin dto) {
+    public ResponseEntity<ReturnDto> login(@RequestBody UserLogin dto) {
         try {
-            String jwt = userService.login(dto);
-            return ResponseEntity.ok(jwt);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.login(dto)));
         } catch (Exception e) {
             e.printStackTrace();
         }

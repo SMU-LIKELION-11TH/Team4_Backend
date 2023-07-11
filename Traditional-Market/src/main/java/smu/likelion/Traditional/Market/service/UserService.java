@@ -8,7 +8,7 @@ import smu.likelion.Traditional.Market.dto.user.*;
 import java.util.List;
 
 public interface UserService {
-    public String login(UserLogin dto);
+    public UserLoginReturnDto login(UserLogin dto);
     public UserReturnDto getUser();
     public UserReturnDto createUser(UserRegister dto);
     public UserReturnDto updateUser(UserRequestDto dto, MultipartFile multipartFile);

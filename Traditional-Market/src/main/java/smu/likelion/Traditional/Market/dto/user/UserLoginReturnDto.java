@@ -1,14 +1,16 @@
 package smu.likelion.Traditional.Market.dto.user;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.domain.enums.Role;
 
-import java.time.LocalDateTime;
-
 @Getter @Setter
 @NoArgsConstructor
-public class UserReturnDto {
+public class UserLoginReturnDto {
+
     private Long id;
     private String email;
     private String nickname;
@@ -16,9 +18,10 @@ public class UserReturnDto {
     private String imageUrl;
     private String createdAt;
     private String updatedAt;
+    private String jwt;
 
     @Builder
-    public UserReturnDto(User entity) {
+    public UserLoginReturnDto(User entity, String jwt) {
         this.id = entity.getId();
         this.email = entity.getEmail();
         this.nickname = entity.getNickname();
@@ -26,5 +29,6 @@ public class UserReturnDto {
         this.imageUrl = entity.getSaveFilename();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
+        this.jwt = jwt;
     }
 }

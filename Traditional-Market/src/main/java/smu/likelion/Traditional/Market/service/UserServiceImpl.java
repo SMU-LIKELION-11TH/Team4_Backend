@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String login(UserLogin dto) {
+    public UserLoginReturnDto login(UserLogin dto) {
 
         User user = findUser(dto.getEmail());
         // Password Check
@@ -67,7 +67,10 @@ public class UserServiceImpl implements UserService {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return jwt;
+        return UserLoginReturnDto.builder()
+                .entity(user)
+                .jwt(jwt)
+                .build();
     }
 
     @Override
