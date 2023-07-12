@@ -53,16 +53,16 @@ public class MenuController {
     public ResponseEntity<ReturnDto> updateMenuById(@PathVariable("storeid") Long id, @PathVariable("menuid") Long menuid,
                                                         @RequestPart("menuRequestDto") MenuRequestDto menuRequestDto,
                                                         @RequestPart(value = "file", required = false) MultipartFile file) {
-        MenuReturnDto MenuReturnDto = menuService.update(menuid,menuRequestDto,file);
-        return ResponseEntity.ok(ReturnDto.of(Code.OK));
+        MenuReturnDto menuReturnDto = menuService.update(menuid,menuRequestDto,file);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK,menuReturnDto));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#storeId).getUserId()))")
     @DeleteMapping("/store/{storeid}/menus")
-    public ResponseEntity<HttpStatus> deleteMenu(@RequestParam("menuid") Long id, @PathVariable("storeid") Long storeId){
+    public ResponseEntity<ReturnDto> deleteMenu(@RequestParam("menuid") Long id, @PathVariable("storeid") Long storeId){
         try{
             menuService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         }catch (Exception e){
             e.printStackTrace();
         }

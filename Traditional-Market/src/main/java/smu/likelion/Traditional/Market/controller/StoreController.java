@@ -64,7 +64,7 @@ public class StoreController {
                                                           @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
                                                           @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto) {
         StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto,multipartFiles);
-        return ResponseEntity.ok(ReturnDto.of(Code.OK));
+        return ResponseEntity.ok(ReturnDto.of(Code.OK,storeReturnDto));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
