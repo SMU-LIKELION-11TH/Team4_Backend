@@ -24,9 +24,11 @@ public class StoreRequestDto {
     private String storeTel;
     private List<MenuReturnDto> menuList;
     private List<StoreImageReturnDto> storeImageList;
-    private Long categoryId;
+    private String categoryName;
+    //private Long categoryId;
+
     //builder어떻게 쓸지 고민하기.
-    public StoreRequestDto(String storeName, String storeDesc, String startTime,String endTime, String roadAddress,String detailAddress, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,Long categoryId) {
+    public StoreRequestDto(String storeName, String storeDesc, String startTime,String endTime, String roadAddress,String detailAddress, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,String categoryName) {
         this.storeName = storeName;
         this.storeDesc = storeDesc;
         this.startTime = startTime;
@@ -36,7 +38,8 @@ public class StoreRequestDto {
         this.storeTel = storeTel;
         this.menuList = menuList.stream().map(MenuReturnDto::new).collect(Collectors.toList());
         this.storeImageList = storeImageList.stream().map(StoreImageReturnDto::new).collect(Collectors.toList());
-        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+        //this.categoryId = categoryId;
     }
     public StoreRequestDto(){
 

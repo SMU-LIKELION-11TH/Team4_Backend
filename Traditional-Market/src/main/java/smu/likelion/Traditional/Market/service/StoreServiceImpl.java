@@ -44,7 +44,7 @@ public class StoreServiceImpl implements StoreService{
     public StoreReturnDto save(List<MultipartFile> multipartFiles,StoreRequestDto storeRequestDto) {
         try{
             //store 저장하는 로직
-            Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
+            Optional<Category> category = categoryRepository.findByCategoryName(storeRequestDto.getCategoryName());
             Category category1 = category.get();
             Store store = storeRequestDto.toEntity(category1);
             storeRepository.save(store);
