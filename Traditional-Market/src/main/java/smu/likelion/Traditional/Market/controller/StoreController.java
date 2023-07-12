@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.store.StoreRequestDto;
 import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.service.StoreServiceImpl;
@@ -23,18 +25,18 @@ public class StoreController {
 
     @PreAuthorize("hasRole('CEO')")
     @PostMapping(value = "/stores", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<StoreReturnDto> createStore(@RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
+    public ResponseEntity<ReturnDto> createStore(@RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
                                                       @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto){
         StoreReturnDto storeReturnDto = storeService.save(multipartFiles,storeRequestDto);
-        return ResponseEntity.ok(storeReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK));
     }
 
     @GetMapping("/stores")
-    public ResponseEntity<List<StoreReturnDto>> getAllStore(){
+    public ResponseEntity<ReturnDto> getAllStore(){
         try{
             List<StoreReturnDto> storeReturnDtoList = storeService.findAll();
 
-            return ResponseEntity.ok(storeReturnDtoList);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK,storeReturnDtoList));
 
 
         }catch (Exception e){
@@ -44,24 +46,25 @@ public class StoreController {
     }
 
     @GetMapping("/stores/{storeid}")
-    public ResponseEntity<StoreReturnDto> getStoreById(@PathVariable("storeid") Long id){
+    public ResponseEntity<ReturnDto> getStoreById(@PathVariable("storeid") Long id){
         StoreReturnDto storeReturnDto = storeService.findById(id);
-        return ResponseEntity.ok(storeReturnDto);
+        System.out.println(storeReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK,storeReturnDto));
     }
 
     @GetMapping("/stores/by-category/{categoryId}")
-    public ResponseEntity<List<StoreReturnDto>> getStoreByCategoryId(@PathVariable("categoryId") Long id){
+    public ResponseEntity<ReturnDto> getStoreByCategoryId(@PathVariable("categoryId") Long id){
         List<StoreReturnDto> storeReturnDtoList = storeService.findByCategoryId(id);
-        return ResponseEntity.ok(storeReturnDtoList);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK,storeReturnDtoList));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
     @PutMapping(value = "/stores/{storeid}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<StoreReturnDto> updateStoreById(@PathVariable("storeid") Long id,
+    public ResponseEntity<ReturnDto> updateStoreById(@PathVariable("storeid") Long id,
                                                           @RequestPart(value = "files",required = false) List<MultipartFile> multipartFiles,
                                                           @RequestPart(value = "storeRequestDto") StoreRequestDto storeRequestDto) {
         StoreReturnDto storeReturnDto = storeService.update(id,storeRequestDto,multipartFiles);
-        return ResponseEntity.ok(storeReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")

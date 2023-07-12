@@ -23,6 +23,7 @@ import smu.likelion.Traditional.Market.repository.UserRepository;
 import smu.likelion.Traditional.Market.util.ExceptionUtil;
 import smu.likelion.Traditional.Market.util.FileStore;
 
+import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -46,13 +47,11 @@ public class StoreServiceImpl implements StoreService{
             Optional<Category> category = categoryRepository.findById(storeRequestDto.getCategoryId());
             Category category1 = category.get();
             Store store = storeRequestDto.toEntity(category1);
-            store.setUser(findUser(AuthUtil.getAuthUser()));
             storeRepository.save(store);
-
+            store.updateUser(findUser(AuthUtil.getAuthUser()));
             //이미지 저장하는 로직
             saveImages(multipartFiles, store);
-
-            store.setStoreImageList(storeImageRepository.findByStore_Id(store.getId()));
+            storeRepository.save(store);
 
             /*
             int len = multipartFiles.size();
@@ -161,14 +160,16 @@ public class StoreServiceImpl implements StoreService{
 
                 Optional<Category> category = categoryRepository.findById(store.getCategory().getId());
                 Category category1 = category.get();
-                store.setStoreName(storeRequestDto.getStoreName());
-                store.setStoreDesc(storeRequestDto.getStoreDesc());
-                store.setStoreTel(storeRequestDto.getStoreTel());
-                store.setStartTime(storeRequestDto.getStartTime());
-                store.setEndTime(storeRequestDto.getEndTime());
-                store.setRoadAddress(storeRequestDto.getRoadAddress());
-                store.setDetailAddress(storeRequestDto.getDetailAddress());
-                store.setCategory(category1);
+//                store.setStoreName(storeRequestDto.getStoreName());
+//                store.setStoreDesc(storeRequestDto.getStoreDesc());
+//                store.setStoreTel(storeRequestDto.getStoreTel());
+//                store.setStartTime(storeRequestDto.getStartTime());
+//                store.setEndTime(storeRequestDto.getEndTime());
+//                store.setRoadAddress(storeRequestDto.getRoadAddress());
+//                store.setDetailAddress(storeRequestDto.getDetailAddress());
+//                store.setCategory(category1);
+//
+                store.update(storeRequestDto.getStoreName(), storeRequestDto.getStoreDesc(), storeRequestDto.getStartTime(), storeRequestDto.getEndTime(), storeRequestDto.getStoreTel(), storeRequestDto.getRoadAddress(), store.getDetailAddress());
 
                 List<StoreImage> storeImageList = storeImageRepository.findByStore_Id(store.getId());
                 Iterator<StoreImage> it = storeImageList.iterator();
@@ -181,7 +182,8 @@ public class StoreServiceImpl implements StoreService{
                 saveImages(multipartFiles, store);
 
                 storeRepository.save(store);
-                store.setStoreImageList(storeImageRepository.findByStore_Id(store.getId()));
+                store.updateImage(storeImageRepository.findByStore_Id(store.getId()));
+                //store.setStoreImageList();
 
                 /*
                 for(int i = 0; i < multipartFiles.size(); i++){
@@ -215,6 +217,7 @@ public class StoreServiceImpl implements StoreService{
         return null;
     }
 
+
     @Override
     public void delete(Long id) {
         try {
@@ -244,7 +247,6 @@ public class StoreServiceImpl implements StoreService{
             }
         }
     }
-
     private User findUser(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> ExceptionUtil.id(email, User.class.getName()));

@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuRequestDto;
 import smu.likelion.Traditional.Market.dto.menu.MenuReturnDto;
 import smu.likelion.Traditional.Market.service.MenuServiceImpl;
@@ -22,37 +24,37 @@ public class MenuController {
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#storeId).getUserId()))")
     @PostMapping("/store/{storeid}/menus")
-    public ResponseEntity<MenuReturnDto> createMenu(
+    public ResponseEntity<ReturnDto> createMenu(
             @RequestPart(value = "file",required = false)MultipartFile multipartFile,
             @RequestPart(value = "menuRequestDto")MenuRequestDto menuRequestDto,
             @PathVariable(value = "storeid") Long storeId){
         MenuReturnDto menuReturnDto = menuService.save(multipartFile,menuRequestDto);
-        return ResponseEntity.ok(menuReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK));
     }
 
     @GetMapping("/store/{storeid}/menus")
-    public ResponseEntity<List<MenuReturnDto>> getAllMenu(){
+    public ResponseEntity<ReturnDto> getAllMenu(){
         try{
             List<MenuReturnDto> menuReturnDtoList = menuService.findByAll();
-            return ResponseEntity.ok(menuReturnDtoList);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK,menuReturnDtoList));
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
     }
     @GetMapping("/store/{storeid}/menus/{menuid}")
-    public ResponseEntity<MenuReturnDto> getMenuById(@PathVariable("storeid") Long storeid, @PathVariable("menuid") Long menuid){
+    public ResponseEntity<ReturnDto> getMenuById(@PathVariable("storeid") Long storeid, @PathVariable("menuid") Long menuid){
         MenuReturnDto menuReturnDto = menuService.findById(menuid);
-        return ResponseEntity.ok(menuReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK,menuReturnDto));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#id).getUserId()))")
     @PutMapping("/store/{storeid}/menus/{menuid}")
-    public ResponseEntity<MenuReturnDto> updateMenuById(@PathVariable("storeid") Long id, @PathVariable("menuid") Long menuid,
+    public ResponseEntity<ReturnDto> updateMenuById(@PathVariable("storeid") Long id, @PathVariable("menuid") Long menuid,
                                                         @RequestPart("menuRequestDto") MenuRequestDto menuRequestDto,
                                                         @RequestPart(value = "file", required = false) MultipartFile file) {
         MenuReturnDto MenuReturnDto = menuService.update(menuid,menuRequestDto,file);
-        return ResponseEntity.ok(MenuReturnDto);
+        return ResponseEntity.ok(ReturnDto.of(Code.OK));
     }
 
     @PreAuthorize("hasRole('CEO') and (@permissionChecker.checkPermission(@storeServiceImpl.findById(#storeId).getUserId()))")

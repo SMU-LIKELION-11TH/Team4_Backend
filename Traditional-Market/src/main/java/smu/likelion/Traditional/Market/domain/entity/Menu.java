@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -38,6 +37,18 @@ public class Menu {
     @JoinColumn(name="store_id")
     private Store store;
 
+    public void update(String menuName, Integer menuPrice, String menuDesc, String imageName, String imageUrl,Store store) {
+        this.menuName = menuName;
+        this.menuPrice = menuPrice;
+        this.menuDesc = menuDesc;
+        this.imageName = imageName;
+        this.imageUrl = imageUrl;
+        this.store = store;
+    }
+
+    public void update(){
+
+    }
     public void changeStore(Store store){
         this.store = store;
         store.getMenuList().add(this);

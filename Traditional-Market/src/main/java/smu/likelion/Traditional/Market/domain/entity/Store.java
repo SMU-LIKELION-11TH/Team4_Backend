@@ -4,12 +4,11 @@ import lombok.*;
 
 
 import javax.persistence.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter @Setter
+@Getter
 @Entity
 @Table(name = "stores")
 public class Store {
@@ -44,10 +43,10 @@ public class Store {
     @Column(name = "count_reviews")
     private Integer countReviews;
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "store")
     private List<Menu> menuList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "store")
     private List<StoreImage> storeImageList = new ArrayList<>();
 
     @JsonBackReference
@@ -82,6 +81,23 @@ public class Store {
     public void changeUser(User user){
         this.user = user;
         user.getStores().add(this);
+    }
+
+    public void update(String storeName, String storeDesc, String startTime, String endTime,String storeTel,String roadAddress, String detailAddress) {
+        this.storeName = storeName;
+        this.storeDesc = storeDesc;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.roadAddress = roadAddress;
+        this.detailAddress = detailAddress;
+        this.storeTel = storeTel;
+    }
+    public void updateImage(List<StoreImage> storeImageList){
+        this.storeImageList = storeImageList;
+
+    }
+    public void updateUser(User user){
+        this.user = user;
     }
 
     @Builder

@@ -114,12 +114,13 @@ public class MenuServiceImpl implements MenuService{
             Optional<Store> store = storeRepository.findById(menu.getStore().getId());
             Store store1 = store.get();
 
-            menu.setMenuName(menuRequestDto.getMenuName());
-            menu.setMenuDesc(menuRequestDto.getMenuDesc());
-            menu.setMenuPrice(menuRequestDto.getMenuPrice());
-            menu.setImageName(fileDto.getUploadFilename());
-            menu.setImageUrl(fileDto.getSaveFilename());
-            menu.setStore(store1);
+//            menu.setMenuName(menuRequestDto.getMenuName());
+//            menu.setMenuDesc(menuRequestDto.getMenuDesc());
+//            menu.setMenuPrice(menuRequestDto.getMenuPrice());
+//            menu.setImageName(fileDto.getUploadFilename());
+//            menu.setImageUrl(fileDto.getSaveFilename());
+//            menu.setStore(store1);
+              menu.update(menuRequestDto.getMenuName(), menuRequestDto.getMenuPrice(), menuRequestDto.getMenuDesc(),fileDto.getUploadFilename(),fileDto.getSaveFilename(),store1);
 
             /*
             try {

@@ -6,10 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.entity.Category;
-import smu.likelion.Traditional.Market.domain.enums.Code;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
-import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 
 import java.util.List;
@@ -24,10 +22,10 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/category")
-    public ResponseEntity<?> createCategory(@RequestParam("marketId") Long marketId, @RequestBody CategoryRequestDto categoryRequestDto){
+    public ResponseEntity<ReturnDto> createCategory(@RequestParam("marketId") Long marketId, @RequestBody CategoryRequestDto categoryRequestDto){
         try{
             if(categoryService.save(categoryRequestDto, marketId)){
-                return new ResponseEntity<>(HttpStatus.OK);
+                return ResponseEntity.ok(ReturnDto.of(Code.OK));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
@@ -40,7 +38,7 @@ public class CategoryController {
     public ResponseEntity<ReturnDto> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
         try{
             List<Category> categoryList = categoryService.findByMarketId(marketId);
-            return ResponseEntity.ok(ReturnDto.of(Code.OK, categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList())));
+            return ResponseEntity.ok(ReturnDto.of(Code.OK,categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList())));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -64,10 +62,10 @@ public class CategoryController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/category/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequestDto categoryRequestDto){
+    public ResponseEntity<ReturnDto> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryRequestDto categoryRequestDto){
         try {
             if (categoryService.update(id, categoryRequestDto)){
-                return new ResponseEntity<>(HttpStatus.OK);
+                return  ResponseEntity.ok(ReturnDto.of(Code.OK));
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e){
@@ -81,7 +79,7 @@ public class CategoryController {
     public ResponseEntity<?> deleteCategory(@PathVariable("id") Long id){
         try {
             categoryService.delete(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         } catch (Exception e){
             e.printStackTrace();
         }

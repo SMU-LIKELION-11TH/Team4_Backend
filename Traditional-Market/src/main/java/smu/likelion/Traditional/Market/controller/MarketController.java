@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.entity.Market;
-import smu.likelion.Traditional.Market.domain.enums.Code;
-import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
@@ -36,7 +34,7 @@ public class MarketController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
             }
             marketService.save(marketRequestDto);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -51,7 +49,7 @@ public class MarketController {
             for (Market market : marketList){
                 marketReturnDtoList.add(new MarketReturnDto(market));
             }
-            return ResponseEntity.ok(ReturnDto.of(Code.OK, marketReturnDtoList));
+            return ResponseEntity.ok(ReturnDto.of(Code.OK,marketReturnDtoList));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -65,7 +63,7 @@ public class MarketController {
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(id));
-                return ResponseEntity.ok(ReturnDto.of(Code.OK, new MarketReturnDto(market)));
+                return ResponseEntity.ok(ReturnDto.of(Code.OK,new MarketReturnDto(market)));
             }
             //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ReturnDto.of(Code.BAD_REQUEST));
@@ -84,6 +82,7 @@ public class MarketController {
                 market.setCategoryList(categoryService.findByMarketId(market.getId()));
                 return ResponseEntity.ok(ReturnDto.of(Code.OK, new MarketReturnDto(market)));
             }
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ReturnDto.of(Code.BAD_REQUEST));
         } catch (Exception e){
             e.printStackTrace();
@@ -103,7 +102,7 @@ public class MarketController {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 시장 이름입니다.");
                 }
                 if(marketService.update(id, marketRequestDto)){
-                    return new ResponseEntity<>(HttpStatus.OK);
+                    return ResponseEntity.ok(ReturnDto.of(Code.OK));
                 }
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

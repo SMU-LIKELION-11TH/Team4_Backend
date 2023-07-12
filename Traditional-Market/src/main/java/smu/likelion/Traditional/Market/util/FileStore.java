@@ -80,6 +80,7 @@ public class FileStore {
         }
     }
 
+
     // 확장자 추출
     private String extractExt(String originalFileName) {
         int pos = originalFileName.lastIndexOf(".");
