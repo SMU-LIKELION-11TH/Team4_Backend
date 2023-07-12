@@ -22,10 +22,10 @@ public class StoreReturnDto {
     private String storeTel;
     private List<Menu> menuList;
     private List<StoreImage> storeImageList;
-    private Long categoryId;
     private Float averageStars;
     private Integer countReviews;
     private Long userId;
+    private String categoryName;
 
 
     public StoreReturnDto(Store store){
@@ -41,7 +41,7 @@ public class StoreReturnDto {
         this.storeTel = store.getStoreTel();
         this.menuList = store.getMenuList();
         this.storeImageList = store.getStoreImageList();
-        this.categoryId = store.getCategory().getId();
+        this.categoryName = store.getCategory().getCategoryName();
         this.userId = store.getUser().getId();
     }
 }
