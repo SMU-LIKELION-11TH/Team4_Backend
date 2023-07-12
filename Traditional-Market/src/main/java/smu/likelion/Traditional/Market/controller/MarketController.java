@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.entity.Market;
+import smu.likelion.Traditional.Market.domain.enums.Code;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.dto.market.MarketRequestDto;
 import smu.likelion.Traditional.Market.dto.market.MarketReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
@@ -42,14 +44,14 @@ public class MarketController {
     }
 
     @GetMapping("/markets/all")
-    public ResponseEntity<List<MarketReturnDto>> getMarkets(){
+    public ResponseEntity<ReturnDto> getMarkets(){
         try{
             List<Market> marketList = marketService.findAll();
             List<MarketReturnDto> marketReturnDtoList = new ArrayList<>();
             for (Market market : marketList){
                 marketReturnDtoList.add(new MarketReturnDto(market));
             }
-            return ResponseEntity.ok(marketReturnDtoList);
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, marketReturnDtoList));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -57,15 +59,16 @@ public class MarketController {
     }
 
     @GetMapping("/markets/{id}")
-    public ResponseEntity<MarketReturnDto> getMarketById(@PathVariable("id") Long id){
+    public ResponseEntity<ReturnDto> getMarketById(@PathVariable("id") Long id){
         try{
             Optional<Market> marketOptional = marketService.findById(id);
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(id));
-                return ResponseEntity.ok(new MarketReturnDto(market));
+                return ResponseEntity.ok(ReturnDto.of(Code.OK, new MarketReturnDto(market)));
             }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            //return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ReturnDto.of(Code.BAD_REQUEST));
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -73,15 +76,15 @@ public class MarketController {
     }
 
     @GetMapping("/markets")
-    public ResponseEntity<MarketReturnDto> getMarketByName(@RequestParam("marketName") String marketName){
+    public ResponseEntity<ReturnDto> getMarketByName(@RequestParam("marketName") String marketName){
         try{
             Optional<Market> marketOptional = marketService.findByMarketName(marketName);
             if(marketOptional.isPresent()){
                 Market market = marketOptional.get();
                 market.setCategoryList(categoryService.findByMarketId(market.getId()));
-                return ResponseEntity.ok(new MarketReturnDto(market));
+                return ResponseEntity.ok(ReturnDto.of(Code.OK, new MarketReturnDto(market)));
             }
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ReturnDto.of(Code.BAD_REQUEST));
         } catch (Exception e){
             e.printStackTrace();
         }

@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import smu.likelion.Traditional.Market.domain.entity.Category;
+import smu.likelion.Traditional.Market.domain.enums.Code;
 import smu.likelion.Traditional.Market.dto.category.CategoryRequestDto;
 import smu.likelion.Traditional.Market.dto.category.CategoryReturnDto;
+import smu.likelion.Traditional.Market.dto.common.ReturnDto;
 import smu.likelion.Traditional.Market.service.CategoryServiceImpl;
 
 import java.util.List;
@@ -35,10 +37,10 @@ public class CategoryController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<CategoryReturnDto>> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
+    public ResponseEntity<ReturnDto> getCategoriesByMarketId(@RequestParam("marketId") Long marketId){
         try{
             List<Category> categoryList = categoryService.findByMarketId(marketId);
-            return ResponseEntity.ok(categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList()));
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, categoryList.stream().map(CategoryReturnDto::new).collect(Collectors.toList())));
         } catch (Exception e){
             e.printStackTrace();
         }
