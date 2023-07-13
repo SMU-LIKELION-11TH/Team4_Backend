@@ -25,7 +25,6 @@ public class StoreRequestDto {
     private List<MenuReturnDto> menuList;
     private List<StoreImageReturnDto> storeImageList;
     private String categoryName;
-    //private Long categoryId;
 
     //builder어떻게 쓸지 고민하기.
     public StoreRequestDto(String storeName, String storeDesc, String startTime,String endTime, String roadAddress,String detailAddress, String storeTel, List<Menu> menuList, List<StoreImage> storeImageList,String categoryName) {
