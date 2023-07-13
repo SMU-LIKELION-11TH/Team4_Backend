@@ -21,5 +21,4 @@ public interface StoreService {
     public void delete(Long id);
 
 
-
 }

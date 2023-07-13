@@ -3,6 +3,7 @@ package smu.likelion.Traditional.Market.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.enums.Code;
@@ -97,6 +98,17 @@ public class UserController {
     public ResponseEntity<ReturnDto> getMyReviewList(@RequestParam(required = false) String sort) {
         try {
             return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getMyReviewList(sort)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @PreAuthorize("hasRole('CEO')")
+    @GetMapping("/user/stores")
+    public ResponseEntity<ReturnDto> getMyStoreList() {
+        try {
+            return ResponseEntity.ok(ReturnDto.of(Code.OK, userService.getMyStoreList()));
         } catch (Exception e) {
             e.printStackTrace();
         }

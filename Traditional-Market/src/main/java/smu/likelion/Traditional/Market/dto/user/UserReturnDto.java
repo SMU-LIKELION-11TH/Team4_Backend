@@ -16,7 +16,6 @@ public class UserReturnDto {
     private String imageUrl;
     private String createdAt;
     private String updatedAt;
-
     @Builder
     public UserReturnDto(User entity) {
         this.id = entity.getId();

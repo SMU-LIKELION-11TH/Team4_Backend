@@ -19,15 +19,18 @@ import smu.likelion.Traditional.Market.domain.entity.Review;
 import smu.likelion.Traditional.Market.domain.entity.User;
 import smu.likelion.Traditional.Market.dto.common.FileDto;
 import smu.likelion.Traditional.Market.dto.review.ReviewReturnDto;
+import smu.likelion.Traditional.Market.dto.store.StoreReturnDto;
 import smu.likelion.Traditional.Market.dto.user.*;
 import smu.likelion.Traditional.Market.jwt.JwtFilter;
 import smu.likelion.Traditional.Market.jwt.JwtTokenProvider;
 import smu.likelion.Traditional.Market.repository.ReviewRepository;
+import smu.likelion.Traditional.Market.repository.StoreRepository;
 import smu.likelion.Traditional.Market.repository.UserRepository;
 import smu.likelion.Traditional.Market.util.ExceptionUtil;
 import smu.likelion.Traditional.Market.util.FileStore;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
+    private final StoreRepository storeRepository;
     private final FileStore fileStore;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
@@ -147,5 +151,13 @@ public class UserServiceImpl implements UserService {
         User user = findUser(AuthUtil.getAuthUser());
 
         return Review.toDtoList(reviewRepository.findByUser(user, Sort.by(Sort.Direction.DESC, "stars")));
+    }
+
+    @Override
+    @Transactional
+    public List<StoreReturnDto> getMyStoreList() {
+        User user = findUser(AuthUtil.getAuthUser());
+        return storeRepository.findByUser(user)
+                .stream().map(StoreReturnDto::new).collect(Collectors.toList());
     }
 }

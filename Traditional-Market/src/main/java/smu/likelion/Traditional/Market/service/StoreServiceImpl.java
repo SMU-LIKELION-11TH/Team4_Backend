@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import smu.likelion.Traditional.Market.config.auth.AuthUser;
 import smu.likelion.Traditional.Market.config.auth.AuthUtil;
 import smu.likelion.Traditional.Market.domain.entity.Category;
 import smu.likelion.Traditional.Market.domain.entity.Store;
