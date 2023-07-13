@@ -3,7 +3,6 @@ package smu.likelion.Traditional.Market.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import smu.likelion.Traditional.Market.domain.enums.Code;
@@ -16,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*")
 public class UserController {
     private final UserService userService;
 
